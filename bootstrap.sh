@@ -1,3 +1,3 @@
 #!/bin/bash
 
-export NGROK_DOMAIN="chrisrodz.ngrok.io"
+echo 'export NGROK_DOMAIN=chrisrodz.ngrok.io' >> ~/.bashrc
