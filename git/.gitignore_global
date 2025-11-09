@@ -51,3 +51,5 @@ Thumbs.db
 *.log
 *.tmp
 .cache/
+
+.claude/settings.local.json
