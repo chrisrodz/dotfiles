@@ -55,6 +55,20 @@ Rerun anytime to update symlinks or install missing packages.
 - **Creates `~/.env.local` and `~/.gitconfig.local`** - Templates for secrets (gitignored)
 - **GPG signing optional** - Uncomment in `~/.gitconfig.local` if you use it
 
+### Global AI CLI Dependencies
+
+These dotfiles rely on both the Claude Code CLI and the OpenAI Codex CLI being installed globally so that the companion IDEs/commands work everywhere on the system. `brew bundle` (run inside `bootstrap.sh`) handles this automatically via the `Brewfile`, but you can install or update them manually at any time:
+
+```bash
+brew tap anthropic-ai/claude
+brew install claude-code
+
+brew tap openai/codex
+brew install codex-cli
+```
+
+The CLIs will then be available system-wide (e.g., `claude-code --help`, `codex --help`).
+
 ## Customization
 
 Common changes you might want to make:
@@ -150,3 +164,8 @@ gh repo sync
 - Custom skills
 
 Symlinked to `~/.claude/` for use with Claude Code.
+
+### AI Coding Assistants
+
+- `claude-code` - Global Claude Code CLI installed via Homebrew for Anthropic workflows
+- `codex-cli` - Global OpenAI Codex CLI installed via Homebrew for Codex CLI tooling
