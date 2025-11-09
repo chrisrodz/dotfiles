@@ -24,10 +24,14 @@ cd ~/repos/dotfiles
    ./bootstrap.sh
    ```
 
-3. **Configure secrets**
+3. **Configure secrets and user info**
    ```bash
+   # Git credentials (required for commits)
+   cp ~/repos/dotfiles/git/.gitconfig.local.example ~/.gitconfig.local
+   code ~/.gitconfig.local  # Add your name and email
+
+   # Environment secrets (API keys, tokens, etc.)
    code ~/.env.local
-   # Add your API keys, tokens, etc.
    ```
 
 ### Is it Safe to Rerun?
@@ -44,8 +48,8 @@ Rerun anytime to update symlinks or install missing packages.
 - **GitHub auth required first** - Script uses `gh` CLI for operations
 - **Existing configs backed up** - Your current .zshrc, .gitconfig, etc. are saved
 - **Prompts for git identity** - Asks for name/email if not configured
-- **Creates ~/.env.local** - Template for machine-specific secrets (gitignored)
-- **GPG signing optional** - Uncomment in `git/.gitconfig` if you use it
+- **Creates `~/.env.local` and `~/.gitconfig.local`** - Templates for secrets (gitignored)
+- **GPG signing optional** - Uncomment in `~/.gitconfig.local` if you use it
 
 ## Customization
 
@@ -55,7 +59,7 @@ Common changes you might want to make:
 |------|-------|-----|
 | **Add CLI aliases** | `zsh/.zsh_aliases` | Edit file, add alias lines |
 | **Add brew packages** | `Brewfile` | Add `brew "package-name"`, run `brew bundle` |
-| **Change git settings** | `git/.gitconfig` | Modify aliases, signing, behavior |
+| **Change git settings** | `git/.gitconfig` | Modify aliases, behavior (user info in `~/.gitconfig.local`) |
 | **Update Claude settings** | `claude/CLAUDE.md` | Edit global instructions |
 | **Add slash commands** | `claude/commands/` | Add `.md` files with prompts |
 | **Modify shell behavior** | `zsh/.zshrc` | Edit PATH, themes, plugins |
@@ -117,11 +121,14 @@ gh repo sync
 
 ### Git Configuration
 
+- **Privacy-first**: User info stored in `~/.gitconfig.local` (gitignored)
 - Auto-setup remote on push
 - GitHub credential helper via `gh` CLI
 - Useful aliases (`lg`, `hist`, `unstage`)
-- Optional GPG commit signing
+- Optional GPG commit signing (configure in `~/.gitconfig.local`)
 - Global ignores for Python/Node/macOS
+
+**Setup**: Copy `git/.gitconfig.local.example` to `~/.gitconfig.local` and add your name/email
 
 ### Claude Settings
 
