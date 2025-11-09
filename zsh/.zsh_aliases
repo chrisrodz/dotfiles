@@ -1,0 +1,96 @@
+# ===== Modern CLI Replacements =====
+if command -v eza &> /dev/null; then
+  alias ls="eza --icons"
+  alias ll="eza -lh --icons --git"
+  alias la="eza -lah --icons --git"
+  alias lt="eza --tree --icons --git-ignore"
+fi
+
+if command -v bat &> /dev/null; then
+  alias cat="bat --style=plain"
+  alias ccat="bat"  # colored cat
+fi
+
+if command -v zoxide &> /dev/null; then
+  alias cd="z"
+fi
+
+# ===== Git Shortcuts =====
+alias g="git"
+alias gs="git status"
+alias ga="git add"
+alias gc="git commit"
+alias gp="git push"
+alias gpl="git pull"
+alias gd="git diff"
+alias gco="git checkout"
+alias gb="git branch"
+alias gl="git log --oneline --graph --decorate"
+alias glog="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+
+# ===== Python Development =====
+alias py="python3"
+alias python="python3"
+alias pip="python3 -m pip"
+alias venv="python3 -m venv venv"
+alias activate="source venv/bin/activate"
+alias pyclean="find . -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete"
+
+# uv shortcuts
+alias uvi="uv pip install"
+alias uvr="uv pip install -r requirements.txt"
+alias uvs="uv pip sync"
+
+# ===== Node/TypeScript Development =====
+alias ni="npm install"
+alias nr="npm run"
+alias nrd="npm run dev"
+alias nrb="npm run build"
+alias nrt="npm run test"
+alias ns="npm start"
+alias ys="yarn start"
+alias yb="yarn build"
+alias yd="yarn dev"
+
+# ===== Utilities =====
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias ~="cd ~"
+alias reload="source ~/.zshrc"
+alias zshconfig="code ~/.zshrc"
+alias aliases="code ~/.zsh_aliases"
+
+# Clear screen
+alias c="clear"
+
+# Copy pwd to clipboard
+alias cpwd="pwd | pbcopy"
+
+# Make and change to directory
+mkcd() {
+  mkdir -p "$1" && cd "$1"
+}
+
+# Quick HTTP server
+alias serve="python3 -m http.server"
+
+# Find process using port
+port() {
+  lsof -i :"$1"
+}
+
+# Kill process on port
+killport() {
+  lsof -ti :"$1" | xargs kill -9
+}
+
+# ===== Docker shortcuts (if needed) =====
+alias d="docker"
+alias dc="docker-compose"
+alias dps="docker ps"
+alias dimg="docker images"
+
+# ===== System =====
+alias update="brew update && brew upgrade && brew cleanup"
+alias myip="curl ifconfig.me"

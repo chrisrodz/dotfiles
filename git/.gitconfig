@@ -1,0 +1,64 @@
+[user]
+	# Set your name and email
+	name = YOUR_NAME
+	email = YOUR_EMAIL
+	# Optional: GPG signing key (get with: gpg --list-secret-keys --keyid-format=long)
+	# signingkey = YOUR_GPG_KEY
+
+[core]
+	editor = code --wait
+	excludesfile = ~/.gitignore_global
+	autocrlf = input
+
+[init]
+	defaultBranch = main
+
+[pull]
+	rebase = false
+
+[push]
+	autoSetupRemote = true
+
+[fetch]
+	prune = true
+
+[commit]
+	# Uncomment to sign commits with GPG
+	# gpgsign = true
+
+[gpg]
+	# macOS Homebrew GPG path
+	program = /opt/homebrew/bin/gpg
+
+[credential "https://github.com"]
+	helper =
+	helper = !/opt/homebrew/bin/gh auth git-credential
+
+[credential "https://gist.github.com"]
+	helper =
+	helper = !/opt/homebrew/bin/gh auth git-credential
+
+[alias]
+	# Shortcuts
+	st = status
+	co = checkout
+	br = branch
+	ci = commit
+	unstage = reset HEAD --
+	last = log -1 HEAD
+
+	# Pretty logs
+	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+	hist = log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short
+
+	# List aliases
+	aliases = config --get-regexp alias
+
+[diff]
+	colorMoved = zebra
+
+[merge]
+	conflictstyle = diff3
+
+[color]
+	ui = auto

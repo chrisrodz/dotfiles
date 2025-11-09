@@ -1,0 +1,10 @@
+# Secrets & Environment
+.env.local
+*.key
+*.pem
+
+# OS Files
+.DS_Store
+
+# Backups
+dotfiles-backup-*
