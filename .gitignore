@@ -8,3 +8,4 @@
 
 # Backups
 dotfiles-backup-*
+.claude/settings.local.json
