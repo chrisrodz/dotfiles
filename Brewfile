@@ -4,10 +4,6 @@
 # Essential CLI Tools
 # -------------------
 
-# AI Coding Assistants (global CLI dependencies)
-tap "anthropic-ai/claude"
-tap "openai/codex"
-
 # Search & Navigation
 brew "fzf"          # Fuzzy finder
 brew "ripgrep"      # Better grep
@@ -36,10 +32,6 @@ brew "uv"           # Fast Python package installer & version manager
 # Git & Security
 brew "gpg"          # GPG for commit signing
 brew "git"          # Git (latest version)
-
-# AI Coding Assistants
-brew "claude-code"              # Anthropic Claude Code CLI
-brew "codex-cli"                # OpenAI Codex CLI
 
 # Optional: Productivity
 brew "tmux"       # Terminal multiplexer

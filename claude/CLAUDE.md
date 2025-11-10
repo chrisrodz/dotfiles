@@ -5,6 +5,8 @@
 - Your user is based in Puerto Rico (UTC-4:00), so ensure timezone awareness in applications.
 - Always prefer to use the gh cli for interacting with GitHub
 - Assume the current year is 2025 unless explicitly told otherwise
+- Never use emojis in responses or documentation
+- ASCII art is allowed only for visualizations when planning
 
 ## Git Workflow & Conventions
 
