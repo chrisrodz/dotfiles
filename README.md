@@ -31,10 +31,10 @@ cd ~/repos/dotfiles
    ```bash
    # Git credentials (required for commits)
    cp ~/repos/dotfiles/git/.gitconfig.local.example ~/.gitconfig.local
-   code ~/.gitconfig.local  # Add your name and email
+   cursor ~/.gitconfig.local  # Add your name and email
 
    # Environment secrets (API keys, tokens, etc.)
-   code ~/.env.local
+   cursor ~/.env.local
    ```
 
 ### Is it Safe to Rerun?

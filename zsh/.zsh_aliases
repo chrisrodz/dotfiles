@@ -58,8 +58,8 @@ alias ...="cd ../.."
 alias ....="cd ../../.."
 alias ~="cd ~"
 alias reload="source ~/.zshrc"
-alias zshconfig="code ~/.zshrc"
-alias aliases="code ~/.zsh_aliases"
+alias zshconfig="cursor ~/.zshrc"
+alias aliases="cursor ~/.zsh_aliases"
 
 # Clear screen
 alias c="clear"

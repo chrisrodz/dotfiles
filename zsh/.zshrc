@@ -17,7 +17,7 @@ source $ZSH/oh-my-zsh.sh
 export PATH="$HOME/.local/bin:$PATH"
 
 # ===== Editor =====
-export EDITOR="code"
+export EDITOR="cursor"
 
 # ===== Locale =====
 export LC_ALL=en_US.UTF-8
