@@ -56,3 +56,6 @@ export BAT_THEME="TwoDark"
 # Load local environment variables (API keys, etc.)
 # This file is gitignored and machine-specific
 [ -f ~/.env.local ] && source ~/.env.local
+
+# Added by Antigravity
+export PATH="/Users/chris/.antigravity/antigravity/bin:$PATH"
