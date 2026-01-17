@@ -59,3 +59,20 @@ export BAT_THEME="TwoDark"
 
 # Added by Antigravity
 export PATH="/Users/chris/.antigravity/antigravity/bin:$PATH"
+
+# bun completions
+[ -s "/Users/christian/.bun/_bun" ] && source "/Users/christian/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+HAUS_HOME="/Users/christian/repos"

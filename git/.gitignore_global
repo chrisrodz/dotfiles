@@ -53,3 +53,7 @@ Thumbs.db
 .cache/
 
 .claude/settings.local.json
+
+.skipper-health
+captains-log.md
+voyage.json
