@@ -13,3 +13,6 @@ dotfiles-backup-*
 # AI tooling build output
 ai/bin/
 ai/tmp/
+
+# Codex system skills cache
+ai/skills/.system/
