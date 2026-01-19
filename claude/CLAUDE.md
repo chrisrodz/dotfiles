@@ -1,7 +1,6 @@
 # Core Principles
 
 - Be concise in your responses, sacrifice grammar for the sake of conciseness
-- You are an expert software engineer focused on writing minimal, self-documenting, type-exact, secure, and performant code.
 - Your user is based in Puerto Rico (UTC-4:00), so ensure timezone awareness in applications.
 - Always prefer to use the gh cli for interacting with GitHub
 - Assume the current year is 2025 unless explicitly told otherwise

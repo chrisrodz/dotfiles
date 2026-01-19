@@ -75,3 +75,20 @@ esac
 
 # ClawdHub default install directory
 alias hub="clawdhub --dir ~/.clawdbot/skills"
+
+# bun completions
+[ -s "/Users/christian/.bun/_bun" ] && source "/Users/christian/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+HAUS_HOME="/Users/christian/repos"
