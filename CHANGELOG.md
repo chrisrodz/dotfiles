@@ -4,7 +4,7 @@
 
 ## 2026-01-19
 
-- Centralized AI commands and skills under `ai/`, added canonical `AGENTS.md`, and updated bootstrap symlinks for Codex/Claude/Cursor.
+- Centralized AI commands and skills under `ai/`, added canonical `AGENTS.md`, and updated bootstrap symlinks for Codex/Claude/Cursor, inspired by https://github.com/steipete/agent-scripts.
 - Added `/acceptpr`, `/landpr`, and `/merge-pr` commands plus shared slash-command docs.
 - Cleaned bootstrap links and ignored Codex system skills cache.
 
