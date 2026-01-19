@@ -78,8 +78,9 @@ Common changes you might want to make:
 | **Add CLI aliases**        | `zsh/.zsh_aliases` | Edit file, add alias lines                                   |
 | **Add brew packages**      | `Brewfile`         | Add `brew "package-name"`, run `brew bundle`                 |
 | **Change git settings**    | `git/.gitconfig`   | Modify aliases, behavior (user info in `~/.gitconfig.local`) |
-| **Update Claude settings** | `claude/CLAUDE.md` | Edit global instructions                                     |
-| **Add slash commands**     | `claude/commands/` | Add `.md` files with prompts                                 |
+| **Update agent rules**     | `AGENTS.md`        | Edit shared instructions (Codex/Claude/Cursor)               |
+| **Add slash commands**     | `ai/commands/`     | Add `.md` files with prompts                                 |
+| **Add skills**             | `ai/skills/`       | Add or edit skill folders                                    |
 | **Modify shell behavior**  | `zsh/.zshrc`       | Edit PATH, themes, plugins                                   |
 
 ### Updating Other Machines
@@ -120,11 +121,13 @@ gh repo sync
 
 - `htop` - Process viewer
 - `tree` - Directory visualization
+- `trash` - Safe delete CLI
 
 **Version Managers**
 
 - `nvm` - Node.js version management
 - `uv` - Fast Python package installer & version manager
+- `bun` - JS runtime for tools/scripts
 
 **Git & Security**
 
@@ -140,7 +143,7 @@ gh repo sync
 
 **40+ Aliases** including:
 
-- Modern CLI shortcuts (`ls` → `eza`, `cat` → `bat`, `cd` → `zoxide`)
+- Modern CLI shortcuts (`ls` -> `eza`, `cat` -> `bat`, `cd` -> `zoxide`)
 - Git shortcuts (`gs`, `ga`, `gc`, `gp`, `gl`, `glog`)
 - Python helpers (`venv`, `activate`, `pyclean`)
 - Node shortcuts (`nr`, `nrd`, `nrb`)
@@ -157,13 +160,14 @@ gh repo sync
 
 **Setup**: Copy `git/.gitconfig.local.example` to `~/.gitconfig.local` and add your name/email
 
-### Claude Settings
+### Agent Instructions and Commands
 
-- Global instructions (`CLAUDE.md`)
-- Custom slash commands
-- Custom skills
+- Canonical rules: `AGENTS.md`
+- Pointer for Claude: `claude/CLAUDE.md`
+- Commands: `ai/commands` (symlinked to `~/.codex/prompts`, `~/.claude/commands`, `~/.cursor/commands`)
+- Skills: `ai/skills` (symlinked to `~/.codex/skills`, `~/.claude/skills`)
 
-Symlinked to `~/.claude/` for use with Claude Code.
+Bootstrap wires the symlinks into the correct tool locations.
 
 ### AI Coding Assistants
 

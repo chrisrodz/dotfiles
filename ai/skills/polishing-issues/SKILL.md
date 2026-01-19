@@ -229,12 +229,12 @@ Confirm success, provide issue URL
 
 ## Red Flags - Stop & Ask User
 
-🚩 **Multiple equally valid approaches** → Present ALL options, don't choose
-🚩 **Breaking changes required** → Explicitly call out impact, get approval
-🚩 **Missing critical context** (env vars, services) → Ask before proceeding
-🚩 **Conflicting project conventions** → Present conflict, ask clarification
-🚩 **Issue already well-scoped** → Confirm user wants re-polish or just review
-🚩 **More than 3 options** → Group similar approaches or ask user to narrow scope
+FLAG **Multiple equally valid approaches** -> Present ALL options, don't choose
+FLAG **Breaking changes required** -> Explicitly call out impact, get approval
+FLAG **Missing critical context** (env vars, services) -> Ask before proceeding
+FLAG **Conflicting project conventions** -> Present conflict, ask clarification
+FLAG **Issue already well-scoped** -> Confirm user wants re-polish or just review
+FLAG **More than 3 options** -> Group similar approaches or ask user to narrow scope
 
 ## Examples
 
@@ -410,14 +410,14 @@ Which option should I use?
 
 ## Quick Reference
 
-1. `gh issue view` → fetch issue
+1. `gh issue view` -> fetch issue
 2. Research codebase (conditional: Explore agent for features, Grep for bugs, Read for docs) + check framework docs if needed
 3. Identify gaps (tech details, approaches, requirements, context, criteria, testing)
-4. **Present findings + ALL options with pros/cons** → WAIT for user
+4. **Present findings + ALL options with pros/cons** -> WAIT for user
 5. User chooses approach
 6. Generate concise polished description (problem, user story, implementation, criteria, testing, notes)
-7. **Show preview of appended content** → WAIT for confirmation
-8. `gh issue edit` with append → confirm success
+7. **Show preview of appended content** -> WAIT for confirmation
+8. `gh issue edit` with append -> confirm success
 
 **Never skip:**
 

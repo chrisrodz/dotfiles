@@ -7,7 +7,7 @@ set -e
 DOTFILES_DIR="$HOME/repos/dotfiles"
 BACKUP_DIR="$HOME/dotfiles-backup-$(date +%Y%m%d-%H%M%S)"
 
-echo "🚀 Starting dotfiles setup..."
+echo "Starting dotfiles setup..."
 
 # Colors
 GREEN='\033[0;32m'
@@ -16,15 +16,15 @@ RED='\033[0;31m'
 NC='\033[0m' # No Color
 
 print_success() {
-  echo -e "${GREEN}✓${NC} $1"
+  echo -e "${GREEN}OK${NC} $1"
 }
 
 print_warning() {
-  echo -e "${YELLOW}⚠${NC} $1"
+  echo -e "${YELLOW}WARN${NC} $1"
 }
 
 print_error() {
-  echo -e "${RED}✗${NC} $1"
+  echo -e "${RED}ERR${NC} $1"
 }
 
 # Backup existing files
@@ -50,14 +50,14 @@ create_symlink() {
 if ! command -v gh &> /dev/null; then
   print_error "GitHub CLI (gh) not found. Installing via Homebrew first..."
   if ! command -v brew &> /dev/null; then
-    echo "📦 Installing Homebrew..."
+    echo "Installing Homebrew..."
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   fi
   brew install gh
 fi
 
 if ! gh auth status &> /dev/null; then
-  echo "🔐 Authenticating with GitHub..."
+  echo "Authenticating with GitHub..."
   gh auth login
   print_success "GitHub authenticated"
 else
@@ -66,7 +66,7 @@ fi
 
 # ===== Install Homebrew =====
 if ! command -v brew &> /dev/null; then
-  echo "📦 Installing Homebrew..."
+  echo "Installing Homebrew..."
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   print_success "Homebrew installed"
 else
@@ -74,14 +74,14 @@ else
 fi
 
 # ===== Install Brew Packages =====
-echo "📦 Installing packages from Brewfile..."
+echo "Installing packages from Brewfile..."
 cd "$DOTFILES_DIR"
 brew bundle
 print_success "Packages installed"
 
 # ===== Install Oh My Zsh =====
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
-  echo "🎨 Installing Oh My Zsh..."
+  echo "Installing Oh My Zsh..."
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
   print_success "Oh My Zsh installed"
 else
@@ -102,7 +102,7 @@ if [ ! -d "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting" ]; then
 fi
 
 # ===== Symlink Dotfiles =====
-echo "🔗 Creating symlinks..."
+echo "Creating symlinks..."
 
 # Zsh
 create_symlink "$DOTFILES_DIR/zsh/.zshrc" "$HOME/.zshrc"
@@ -113,19 +113,30 @@ create_symlink "$DOTFILES_DIR/git/.gitconfig" "$HOME/.gitconfig"
 create_symlink "$DOTFILES_DIR/git/.gitignore_global" "$HOME/.gitignore_global"
 
 # Claude
+mkdir -p "$HOME/.claude"
 create_symlink "$DOTFILES_DIR/claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
-mkdir -p "$HOME/.claude/commands"
-mkdir -p "$HOME/.claude/skills"
-for cmd in "$DOTFILES_DIR/claude/commands"/*.md; do
-  [ -f "$cmd" ] && create_symlink "$cmd" "$HOME/.claude/commands/$(basename "$cmd")"
-done
-for skill in "$DOTFILES_DIR/claude/skills"/*; do
-  [ -d "$skill" ] && create_symlink "$skill" "$HOME/.claude/skills/$(basename "$skill")"
+create_symlink "$DOTFILES_DIR/ai/commands" "$HOME/.claude/commands"
+create_symlink "$DOTFILES_DIR/ai/skills" "$HOME/.claude/skills"
+
+# Codex
+mkdir -p "$HOME/.codex"
+create_symlink "$DOTFILES_DIR/AGENTS.md" "$HOME/.codex/AGENTS.md"
+create_symlink "$DOTFILES_DIR/ai/commands" "$HOME/.codex/prompts"
+create_symlink "$DOTFILES_DIR/ai/skills" "$HOME/.codex/skills"
+
+# Cursor
+mkdir -p "$HOME/.cursor"
+create_symlink "$DOTFILES_DIR/ai/commands" "$HOME/.cursor/commands"
+
+# Shared scripts
+mkdir -p "$HOME/.local/bin"
+for script in committer nanobanana shazam-song; do
+  create_symlink "$DOTFILES_DIR/ai/scripts/$script" "$HOME/.local/bin/$script"
 done
 
 # ===== Environment Setup =====
 if [ ! -f "$HOME/.env.local" ]; then
-  echo "📝 Creating .env.local from template..."
+  echo "Creating .env.local from template..."
   cp "$DOTFILES_DIR/.env.local.example" "$HOME/.env.local"
   print_warning "Edit ~/.env.local with your secrets and API keys"
 else
@@ -140,7 +151,7 @@ if [ -n "$CURRENT_NAME" ] && [ -n "$CURRENT_EMAIL" ]; then
   print_success "Git already configured: $CURRENT_NAME <$CURRENT_EMAIL>"
 else
   echo ""
-  echo "📝 Configure Git user info:"
+  echo "Configure Git user info:"
 
   if [ -z "$CURRENT_NAME" ]; then
     read -p "Git name: " git_name
@@ -155,7 +166,7 @@ fi
 
 # ===== Post-install Instructions =====
 echo ""
-echo "✅ Dotfiles setup complete!"
+echo "Dotfiles setup complete!"
 echo ""
 echo "Next steps:"
 echo "1. Edit ~/.env.local with your secrets"
@@ -164,5 +175,5 @@ echo "3. Optional: Configure GPG signing (see git/.gitconfig)"
 echo ""
 
 if [ -d "$BACKUP_DIR" ]; then
-  echo "📦 Backups saved to: $BACKUP_DIR"
+  echo "Backups saved to: $BACKUP_DIR"
 fi

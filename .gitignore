@@ -9,3 +9,7 @@
 # Backups
 dotfiles-backup-*
 .claude/settings.local.json
+
+# AI tooling build output
+ai/bin/
+ai/tmp/

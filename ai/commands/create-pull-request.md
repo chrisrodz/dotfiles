@@ -14,12 +14,11 @@ Create a pull request following best practices:
 8. Create PR using gh pr create with:
    - Title following conventional commit format (determines version bump)
    - Body with Summary section (1-3 bullets describing changes)
-   - Append "🤖 Generated with [Claude Code](https://claude.com/claude-code)" to body
 
 IMPORTANT:
+
 - Analyze ALL commits in the branch, not just the latest commit
 - PR title must use conventional commit prefix (feat:, fix:, docs:, etc.)
 - Commit message should match PR title for consistency
 - Verify branch is not main before proceeding
-- Do NOT use TodoWrite tool - execute directly
 - Return PR URL when complete

@@ -28,6 +28,7 @@ brew "tree"         # Directory visualization
 # Version Management
 brew "nvm"          # Node version manager
 brew "uv"           # Fast Python package installer & version manager
+brew "bun"          # JS runtime for scripts/tools
 
 # Git & Security
 brew "gpg"          # GPG for commit signing
@@ -35,3 +36,8 @@ brew "git"          # Git (latest version)
 
 # Optional: Productivity
 brew "tmux"       # Terminal multiplexer
+brew "trash"      # Safe delete CLI
+
+# Optional: Media tools (used by video-transcript-downloader)
+brew "yt-dlp"
+brew "ffmpeg"
