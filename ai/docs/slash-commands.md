@@ -48,14 +48,10 @@ This repository keeps shared commands in `ai/commands/` and symlinks them into:
 
 **Available commands:**
 
-- `/acceptpr` - Land one PR end-to-end (changelog + thanks, lint, merge, back to main).
-- `/create-prompt` - Create a new Claude prompt.
 - `/create-pull-request` - Create a pull request with all changes committed.
 - `/handoff` - Capture current state for the next agent.
 - `/interview-spec` - Run a product/tech spec interview.
-- `/landpr` - Land PR via temp-branch rebase + full gate before merge.
 - `/merge-pr` - Merge a PR into the default branch and sync main.
 - `/pickup` - Rehydrate context when starting work.
-- `/prd-interview` - Run a PRD interview.
 - `/raise` - Open next `Unreleased` section after a release.
 - `/review-technical-writing` - Review documentation and polish it.
