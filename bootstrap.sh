@@ -130,7 +130,7 @@ create_symlink "$DOTFILES_DIR/ai/commands" "$HOME/.cursor/commands"
 
 # Shared scripts
 mkdir -p "$HOME/.local/bin"
-for script in committer nanobanana shazam-song; do
+for script in committer nanobanana; do
   create_symlink "$DOTFILES_DIR/ai/scripts/$script" "$HOME/.local/bin/$script"
 done
 
