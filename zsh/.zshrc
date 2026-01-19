@@ -18,6 +18,7 @@ export PATH="$HOME/.local/bin:$PATH"
 
 # ===== Editor =====
 export EDITOR="cursor"
+export REACT_TERMINAL="iTerm.app"
 
 # ===== Locale =====
 export LC_ALL=en_US.UTF-8
@@ -59,3 +60,18 @@ export BAT_THEME="TwoDark"
 
 # Added by Antigravity
 export PATH="/Users/chris/.antigravity/antigravity/bin:$PATH"
+
+# Fastlane update_fastlane command needs this
+export GEM_HOME=~/.gems
+export PATH=$PATH:~/.gems/bin
+
+# pnpm
+export PNPM_HOME="/Users/chris/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
+
+# ClawdHub default install directory
+alias hub="clawdhub --dir ~/.clawdbot/skills"
