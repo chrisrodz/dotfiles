@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2026-01-20
+
+- Removed bun from Brewfile.
+
 ## 2026-01-19
 
 - Centralized AI commands and skills under `ai/`, added canonical `AGENTS.md`, and updated bootstrap symlinks for Codex/Claude/Cursor, inspired by https://github.com/steipete/agent-scripts.

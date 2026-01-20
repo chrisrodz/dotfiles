@@ -28,7 +28,6 @@ brew "tree"         # Directory visualization
 # Version Management
 brew "nvm"          # Node version manager
 brew "uv"           # Fast Python package installer & version manager
-brew "bun"          # JS runtime for scripts/tools
 
 # Git & Security
 brew "gpg"          # GPG for commit signing
