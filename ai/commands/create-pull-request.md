@@ -13,7 +13,9 @@ Create a pull request following best practices:
 7. Review git log and full diff from main branch to understand all commits in this PR
 8. Create PR using gh pr create with:
    - Title following conventional commit format (determines version bump)
-   - Body with Summary section (1-3 bullets describing changes)
+   - Body with summary of changes
+   - Reference how the changes were tested and any additional user testing required
+   - If the PR is related to a GitHub issue, reference the issue so it's closed when the PR is merged
 
 IMPORTANT:
 
