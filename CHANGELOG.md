@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Migrated skills to global installation via `npx skills add --global`. Skills now installed from public registries instead of being bundled in repo.
+- Removed `ai/skills/` directory. Skills are now managed by the Skills CLI.
+- Added `ai/codex-config.toml` for Codex CLI model settings (gpt-5.2-codex + high reasoning).
+- Updated bootstrap to preserve existing Codex config (machine-specific project trusts).
+
 ## 2026-01-20
 
 - Removed bun from Brewfile.

@@ -80,7 +80,7 @@ Common changes you might want to make:
 | **Change git settings**    | `git/.gitconfig`   | Modify aliases, behavior (user info in `~/.gitconfig.local`) |
 | **Update agent rules**     | `AGENTS.md`        | Edit shared instructions (Codex/Claude/Cursor)               |
 | **Add slash commands**     | `ai/commands/`     | Add `.md` files with prompts                                 |
-| **Add skills**             | `ai/skills/`       | Add or edit skill folders                                    |
+| **Add skills**             | `npx skills add`   | Install globally via Skills CLI                              |
 | **Modify shell behavior**  | `zsh/.zshrc`       | Edit PATH, themes, plugins                                   |
 
 ### Updating Other Machines
@@ -164,10 +164,34 @@ gh repo sync
 
 - Canonical rules: `AGENTS.md`
 - Pointer for Claude: `claude/CLAUDE.md`
+- Codex config: `ai/codex-config.toml` (model settings, copied to `~/.codex/config.toml`)
 - Commands: `ai/commands` (symlinked to `~/.codex/prompts`, `~/.claude/commands`, `~/.cursor/commands`)
-- Skills: `ai/skills` (symlinked to `~/.codex/skills`, `~/.claude/skills`)
+- Skills: Installed globally via `npx skills add --global <skill>`
 
-Bootstrap wires the symlinks into the correct tool locations.
+Bootstrap wires the symlinks and installs global skills.
+
+### Global Skills (installed by bootstrap)
+
+Skills are installed globally to `~/.agents/skills/` from public registries:
+
+```bash
+# From steipete/agent-scripts
+npx skills add --global -y steipete/agent-scripts@video-transcript-downloader
+npx skills add --global -y steipete/agent-scripts@brave-search
+npx skills add --global -y steipete/agent-scripts@nano-banana-pro
+npx skills add --global -y steipete/agent-scripts@openai-image-gen
+npx skills add --global -y steipete/agent-scripts@create-cli
+npx skills add --global -y steipete/agent-scripts@frontend-design
+npx skills add --global -y steipete/agent-scripts@instruments-profiling
+npx skills add --global -y steipete/agent-scripts@markdown-converter
+npx skills add --global -y steipete/agent-scripts@native-app-performance
+
+# From other registries
+npx skills add --global -y vercel-labs/agent-browser@agent-browser
+npx skills add --global -y chrisrodz/dotfiles@polishing-issues
+```
+
+To find and add more skills: `npx skills find <query>` then `npx skills add --global -y <owner/repo@skill>`
 
 ### AI Coding Assistants
 

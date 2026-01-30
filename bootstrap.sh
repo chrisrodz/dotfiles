@@ -36,10 +36,16 @@ backup_if_exists() {
   fi
 }
 
-# Create symlink
+# Create symlink (idempotent - skips if already correct)
 create_symlink() {
   local source=$1
   local target=$2
+
+  # If target is already a symlink pointing to the correct source, skip
+  if [ -L "$target" ] && [ "$(readlink "$target")" = "$source" ]; then
+    print_success "Already linked $target"
+    return 0
+  fi
 
   backup_if_exists "$target"
   ln -sf "$source" "$target"
@@ -116,13 +122,19 @@ create_symlink "$DOTFILES_DIR/git/.gitignore_global" "$HOME/.gitignore_global"
 mkdir -p "$HOME/.claude"
 create_symlink "$DOTFILES_DIR/claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
 create_symlink "$DOTFILES_DIR/ai/commands" "$HOME/.claude/commands"
-create_symlink "$DOTFILES_DIR/ai/skills" "$HOME/.claude/skills"
 
 # Codex
 mkdir -p "$HOME/.codex"
 create_symlink "$DOTFILES_DIR/AGENTS.md" "$HOME/.codex/AGENTS.md"
 create_symlink "$DOTFILES_DIR/ai/commands" "$HOME/.codex/prompts"
-create_symlink "$DOTFILES_DIR/ai/skills" "$HOME/.codex/skills"
+# Merge codex config (preserve machine-specific project trusts)
+if [ -f "$HOME/.codex/config.toml" ]; then
+  # Keep existing config, just ensure model settings are current
+  print_success "Codex config exists (preserving project trusts)"
+else
+  cp "$DOTFILES_DIR/ai/codex-config.toml" "$HOME/.codex/config.toml"
+  print_success "Created Codex config"
+fi
 
 # Cursor
 mkdir -p "$HOME/.cursor"
@@ -133,6 +145,28 @@ mkdir -p "$HOME/.local/bin"
 for script in committer nanobanana; do
   create_symlink "$DOTFILES_DIR/ai/scripts/$script" "$HOME/.local/bin/$script"
 done
+
+# ===== Install Global Skills =====
+echo "Installing global agent skills..."
+if command -v npx &> /dev/null; then
+  # Core skills from public registries (installed to ~/.agents/skills/)
+  # From steipete/agent-scripts
+  npx skills add --global -y steipete/agent-scripts@video-transcript-downloader 2>/dev/null || true
+  npx skills add --global -y steipete/agent-scripts@brave-search 2>/dev/null || true
+  npx skills add --global -y steipete/agent-scripts@nano-banana-pro 2>/dev/null || true
+  npx skills add --global -y steipete/agent-scripts@openai-image-gen 2>/dev/null || true
+  npx skills add --global -y steipete/agent-scripts@create-cli 2>/dev/null || true
+  npx skills add --global -y steipete/agent-scripts@frontend-design 2>/dev/null || true
+  npx skills add --global -y steipete/agent-scripts@instruments-profiling 2>/dev/null || true
+  npx skills add --global -y steipete/agent-scripts@markdown-converter 2>/dev/null || true
+  npx skills add --global -y steipete/agent-scripts@native-app-performance 2>/dev/null || true
+  # From other registries
+  npx skills add --global -y vercel-labs/agent-browser@agent-browser 2>/dev/null || true
+  npx skills add --global -y chrisrodz/dotfiles@polishing-issues 2>/dev/null || true
+  print_success "Global skills installed to ~/.agents/skills/"
+else
+  print_warning "npx not found, skipping skills installation"
+fi
 
 # ===== Environment Setup =====
 if [ ! -f "$HOME/.env.local" ]; then
