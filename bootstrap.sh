@@ -164,6 +164,8 @@ if command -v npx &> /dev/null; then
   npx skills add --global -y vercel-labs/agent-browser@agent-browser 2>/dev/null || true
   npx skills add --global -y chrisrodz/dotfiles@polishing-issues 2>/dev/null || true
   npx skills add --global -y agentmail-to/agentmail-skills@agentmail 2>/dev/null || true
+  # Resend (email sending platform) - umbrella skill routes to send-email/resend-inbound
+  npx skills add --global -y resend/resend-skills@resend 2>/dev/null || true
   print_success "Global skills installed to ~/.agents/skills/"
 else
   print_warning "npx not found, skipping skills installation"

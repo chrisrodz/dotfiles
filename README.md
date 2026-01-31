@@ -189,6 +189,7 @@ npx skills add --global -y steipete/agent-scripts@native-app-performance
 # From other registries
 npx skills add --global -y vercel-labs/agent-browser@agent-browser
 npx skills add --global -y chrisrodz/dotfiles@polishing-issues
+npx skills add --global -y resend/resend-skills@resend
 ```
 
 To find and add more skills: `npx skills find <query>` then `npx skills add --global -y <owner/repo@skill>`
