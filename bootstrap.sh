@@ -166,6 +166,16 @@ if command -v npx &> /dev/null; then
   npx skills add --global -y agentmail-to/agentmail-skills@agentmail 2>/dev/null || true
   # Resend (email sending platform) - umbrella skill routes to send-email/resend-inbound
   npx skills add --global -y resend/resend-skills@resend 2>/dev/null || true
+  # Expo (React Native framework) - official skills from expo/skills
+  npx skills add --global -y expo/skills@building-native-ui 2>/dev/null || true
+  npx skills add --global -y expo/skills@expo-api-routes 2>/dev/null || true
+  npx skills add --global -y expo/skills@expo-cicd-workflows 2>/dev/null || true
+  npx skills add --global -y expo/skills@expo-deployment 2>/dev/null || true
+  npx skills add --global -y expo/skills@expo-dev-client 2>/dev/null || true
+  npx skills add --global -y expo/skills@expo-tailwind-setup 2>/dev/null || true
+  npx skills add --global -y expo/skills@native-data-fetching 2>/dev/null || true
+  npx skills add --global -y expo/skills@upgrading-expo 2>/dev/null || true
+  npx skills add --global -y expo/skills@use-dom 2>/dev/null || true
   print_success "Global skills installed to ~/.agents/skills/"
 else
   print_warning "npx not found, skipping skills installation"

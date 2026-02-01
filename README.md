@@ -190,6 +190,17 @@ npx skills add --global -y steipete/agent-scripts@native-app-performance
 npx skills add --global -y vercel-labs/agent-browser@agent-browser
 npx skills add --global -y chrisrodz/dotfiles@polishing-issues
 npx skills add --global -y resend/resend-skills@resend
+
+# Expo (React Native framework)
+npx skills add --global -y expo/skills@building-native-ui
+npx skills add --global -y expo/skills@expo-api-routes
+npx skills add --global -y expo/skills@expo-cicd-workflows
+npx skills add --global -y expo/skills@expo-deployment
+npx skills add --global -y expo/skills@expo-dev-client
+npx skills add --global -y expo/skills@expo-tailwind-setup
+npx skills add --global -y expo/skills@native-data-fetching
+npx skills add --global -y expo/skills@upgrading-expo
+npx skills add --global -y expo/skills@use-dom
 ```
 
 To find and add more skills: `npx skills find <query>` then `npx skills add --global -y <owner/repo@skill>`
