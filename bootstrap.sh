@@ -162,7 +162,11 @@ if command -v npx &> /dev/null; then
   npx skills add --global -y steipete/agent-scripts@native-app-performance 2>/dev/null || true
   # From other registries
   npx skills add --global -y vercel-labs/agent-browser@agent-browser 2>/dev/null || true
-  npx skills add --global -y chrisrodz/dotfiles@polishing-issues 2>/dev/null || true
+  # Local skills (not in any public registry) - symlinked from this repo
+  mkdir -p "$HOME/.agents/skills"
+  mkdir -p "$HOME/.claude/skills"
+  create_symlink "$DOTFILES_DIR/ai/skills/polishing-issues" "$HOME/.agents/skills/polishing-issues"
+  create_symlink "$HOME/.agents/skills/polishing-issues" "$HOME/.claude/skills/polishing-issues"
   npx skills add --global -y agentmail-to/agentmail-skills@agentmail 2>/dev/null || true
   # Resend (email sending platform) - umbrella skill routes to send-email/resend-inbound
   npx skills add --global -y resend/resend-skills@resend 2>/dev/null || true
