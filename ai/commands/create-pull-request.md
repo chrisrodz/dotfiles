@@ -14,13 +14,14 @@ Create a pull request following best practices:
 8. Create PR using gh pr create with:
    - Title following conventional commit format (determines version bump)
    - Body with summary of changes
+   - IMPORTANT: Always use the repo's pull request template if it exists.
    - Reference how the changes were tested and any additional user testing required
    - If the PR is related to a GitHub issue, reference the issue so it's closed when the PR is merged
 
 IMPORTANT:
 
+- Always use the repo's pull request template if it exists.
 - Analyze ALL commits in the branch, not just the latest commit
 - PR title must use conventional commit prefix (feat:, fix:, docs:, etc.)
-- Commit message should match PR title for consistency
 - Verify branch is not main before proceeding
 - Return PR URL when complete
