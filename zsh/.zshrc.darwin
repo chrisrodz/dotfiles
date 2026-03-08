@@ -1,0 +1,34 @@
+# macOS-specific shell configuration
+
+# ===== Editor =====
+export EDITOR="cursor"
+export REACT_TERMINAL="iTerm.app"
+
+# ===== NVM from Homebrew =====
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
+[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
+
+# ===== Antigravity =====
+[ -d "$HOME/.antigravity/antigravity/bin" ] && export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
+
+# ===== Fastlane / Ruby Gems =====
+export GEM_HOME=~/.gems
+export PATH="$PATH:$HOME/.gems/bin"
+
+# ===== pnpm =====
+export PNPM_HOME="$HOME/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+
+# ===== Bun =====
+export BUN_INSTALL="$HOME/.bun"
+[ -s "$BUN_INSTALL/_bun" ] && source "$BUN_INSTALL/_bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+# ===== ClawdHub =====
+alias hub="clawdhub --dir ~/.clawdbot/skills"
+
+# ===== Homebrew tool paths =====
+[ -d "/opt/homebrew/opt/libpq/bin" ] && export PATH="/opt/homebrew/opt/libpq/bin:$PATH"

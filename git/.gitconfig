@@ -4,7 +4,8 @@
 	path = ~/.gitconfig.local
 
 [core]
-	editor = cursor --wait
+	# Override in ~/.gitconfig.local (e.g. editor = cursor --wait)
+	editor = vim
 	excludesfile = ~/.gitignore_global
 	autocrlf = input
 
@@ -25,16 +26,15 @@
 	# gpgsign = true
 
 [gpg]
-	# macOS Homebrew GPG path
-	program = /opt/homebrew/bin/gpg
+	program = gpg
 
 [credential "https://github.com"]
 	helper = 
-	helper = !/opt/homebrew/bin/gh auth git-credential
+	helper = !gh auth git-credential
 
 [credential "https://gist.github.com"]
-	helper = 
-	helper = !/opt/homebrew/bin/gh auth git-credential
+	helper =
+	helper = !gh auth git-credential
 
 [alias]
 	# Shortcuts
@@ -65,3 +65,6 @@
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
+[user]
+	name = chrisrodz
+	email = hey@chrisrodz.io

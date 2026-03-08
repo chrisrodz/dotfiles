@@ -1,13 +1,15 @@
 #!/bin/bash
 # Dotfiles Bootstrap Script
 # Installs and configures development environment
+# Works on macOS (Homebrew) and Linux/Ubuntu (apt)
 
 set -e
 
 DOTFILES_DIR="$HOME/repos/dotfiles"
 BACKUP_DIR="$HOME/dotfiles-backup-$(date +%Y%m%d-%H%M%S)"
+OS="$(uname -s)"
 
-echo "Starting dotfiles setup..."
+echo "Starting dotfiles setup... (detected OS: $OS)"
 
 # Colors
 GREEN='\033[0;32m'
@@ -52,14 +54,104 @@ create_symlink() {
   print_success "Linked $target"
 }
 
-# ===== GitHub CLI Authentication =====
-if ! command -v gh &> /dev/null; then
-  print_error "GitHub CLI (gh) not found. Installing via Homebrew first..."
+# ===== Package Installation =====
+if [ "$OS" = "Darwin" ]; then
+  # macOS: Install Homebrew + packages
   if ! command -v brew &> /dev/null; then
     echo "Installing Homebrew..."
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    print_success "Homebrew installed"
+  else
+    print_success "Homebrew already installed"
   fi
-  brew install gh
+
+  echo "Installing packages from Brewfile..."
+  cd "$DOTFILES_DIR"
+  brew bundle
+  print_success "Brew packages installed"
+
+elif [ "$OS" = "Linux" ]; then
+  # Linux: Install packages via apt
+  echo "Installing apt packages..."
+  sudo apt update
+  grep -v '^#' "$DOTFILES_DIR/packages.apt" | grep -v '^$' | xargs sudo apt install -y
+  print_success "apt packages installed"
+
+  # Install tools not in apt repos (or outdated there)
+
+  # GitHub CLI
+  if ! command -v gh &> /dev/null; then
+    echo "Installing GitHub CLI..."
+    (type -p wget >/dev/null || (sudo apt update && sudo apt-get install wget -y)) \
+      && sudo mkdir -p -m 755 /etc/apt/keyrings \
+      && out=$(mktemp) && wget -nv -O"$out" https://cli.github.com/packages/githubcli-archive-keyring.gpg \
+      && cat "$out" | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null \
+      && sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
+      && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+      && sudo apt update \
+      && sudo apt install gh -y
+    print_success "GitHub CLI installed"
+  else
+    print_success "GitHub CLI already installed"
+  fi
+
+  # eza (modern ls)
+  if ! command -v eza &> /dev/null; then
+    echo "Installing eza..."
+    sudo mkdir -p /etc/apt/keyrings
+    wget -qO- https://raw.githubusercontent.com/eza-community/eza/main/deb.asc | sudo gpg --dearmor -o /etc/apt/keyrings/gierens.gpg
+    echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main" | sudo tee /etc/apt/sources.list.d/gierens.list
+    sudo chmod 644 /etc/apt/keyrings/gierens.gpg
+    sudo apt update
+    sudo apt install -y eza
+    print_success "eza installed"
+  else
+    print_success "eza already installed"
+  fi
+
+  # zoxide (smart cd)
+  if ! command -v zoxide &> /dev/null; then
+    echo "Installing zoxide..."
+    curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
+    print_success "zoxide installed"
+  else
+    print_success "zoxide already installed"
+  fi
+
+  # yq (YAML processor)
+  if ! command -v yq &> /dev/null; then
+    echo "Installing yq..."
+    YQ_VERSION=$(curl -s https://api.github.com/repos/mikefarah/yq/releases/latest | grep tag_name | cut -d '"' -f 4)
+    sudo wget -qO /usr/local/bin/yq "https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_amd64"
+    sudo chmod +x /usr/local/bin/yq
+    print_success "yq installed"
+  else
+    print_success "yq already installed"
+  fi
+
+  # uv (Python package manager)
+  if ! command -v uv &> /dev/null; then
+    echo "Installing uv..."
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+    print_success "uv installed"
+  else
+    print_success "uv already installed"
+  fi
+
+  # tldr
+  if ! command -v tldr &> /dev/null; then
+    echo "Installing tldr..."
+    sudo apt install -y tldr 2>/dev/null || pip3 install tldr 2>/dev/null || true
+    print_success "tldr installed"
+  else
+    print_success "tldr already installed"
+  fi
+fi
+
+# ===== GitHub CLI Authentication =====
+if ! command -v gh &> /dev/null; then
+  print_error "GitHub CLI (gh) not found after package installation"
+  exit 1
 fi
 
 if ! gh auth status &> /dev/null; then
@@ -69,21 +161,6 @@ if ! gh auth status &> /dev/null; then
 else
   print_success "GitHub already authenticated"
 fi
-
-# ===== Install Homebrew =====
-if ! command -v brew &> /dev/null; then
-  echo "Installing Homebrew..."
-  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-  print_success "Homebrew installed"
-else
-  print_success "Homebrew already installed"
-fi
-
-# ===== Install Brew Packages =====
-echo "Installing packages from Brewfile..."
-cd "$DOTFILES_DIR"
-brew bundle
-print_success "Packages installed"
 
 # ===== Install Oh My Zsh =====
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
@@ -107,16 +184,44 @@ if [ ! -d "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting" ]; then
   print_success "zsh-syntax-highlighting installed"
 fi
 
+# ===== NVM (Linux only - macOS gets it from Homebrew) =====
+if [ "$OS" = "Linux" ] && [ ! -d "$HOME/.nvm" ]; then
+  echo "Installing NVM..."
+  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+  print_success "NVM installed"
+fi
+
+# ===== Set default shell to zsh (Linux only) =====
+if [ "$OS" = "Linux" ]; then
+  CURRENT_SHELL=$(getent passwd "$USER" | cut -d: -f7)
+  ZSH_PATH=$(which zsh)
+  if [ "$CURRENT_SHELL" != "$ZSH_PATH" ]; then
+    echo "Setting default shell to zsh..."
+    chsh -s "$ZSH_PATH"
+    print_success "Default shell set to zsh"
+  else
+    print_success "Default shell already zsh"
+  fi
+fi
+
 # ===== Symlink Dotfiles =====
 echo "Creating symlinks..."
 
 # Zsh
 create_symlink "$DOTFILES_DIR/zsh/.zshrc" "$HOME/.zshrc"
 create_symlink "$DOTFILES_DIR/zsh/.zsh_aliases" "$HOME/.zsh_aliases"
+if [ "$OS" = "Darwin" ]; then
+  create_symlink "$DOTFILES_DIR/zsh/.zshrc.darwin" "$HOME/.zshrc.darwin"
+elif [ "$OS" = "Linux" ]; then
+  create_symlink "$DOTFILES_DIR/zsh/.zshrc.linux" "$HOME/.zshrc.linux"
+fi
 
 # Git
 create_symlink "$DOTFILES_DIR/git/.gitconfig" "$HOME/.gitconfig"
 create_symlink "$DOTFILES_DIR/git/.gitignore_global" "$HOME/.gitignore_global"
+
+# Tmux
+create_symlink "$DOTFILES_DIR/tmux/.tmux.conf" "$HOME/.tmux.conf"
 
 # Claude
 mkdir -p "$HOME/.claude"
@@ -222,7 +327,12 @@ echo ""
 echo "Next steps:"
 echo "1. Edit ~/.env.local with your secrets"
 echo "2. Restart your terminal or run: source ~/.zshrc"
-echo "3. Optional: Configure GPG signing (see git/.gitconfig)"
+if [ "$OS" = "Darwin" ]; then
+  echo "3. Optional: Set editor override in ~/.gitconfig.local (editor = cursor --wait)"
+  echo "4. Optional: Configure GPG signing (see git/.gitconfig)"
+else
+  echo "3. Optional: Configure GPG signing (see git/.gitconfig)"
+fi
 echo ""
 
 if [ -d "$BACKUP_DIR" ]; then

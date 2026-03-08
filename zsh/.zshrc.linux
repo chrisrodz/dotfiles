@@ -1,0 +1,14 @@
+# Linux-specific shell configuration
+
+# ===== Editor =====
+export EDITOR="vim"
+
+# ===== NVM from manual install =====
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
+# ===== apt package name aliases =====
+# fd-find is named 'fdfind' on Debian/Ubuntu
+command -v fdfind &>/dev/null && ! command -v fd &>/dev/null && alias fd="fdfind"
+# bat is named 'batcat' on Debian/Ubuntu
+command -v batcat &>/dev/null && ! command -v bat &>/dev/null && alias bat="batcat"

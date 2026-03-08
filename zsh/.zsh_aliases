@@ -58,14 +58,18 @@ alias ...="cd ../.."
 alias ....="cd ../../.."
 alias ~="cd ~"
 alias reload="source ~/.zshrc"
-alias zshconfig="cursor ~/.zshrc"
-alias aliases="cursor ~/.zsh_aliases"
+alias zshconfig="${EDITOR:-vim} ~/.zshrc"
+alias aliases="${EDITOR:-vim} ~/.zsh_aliases"
 
 # Clear screen
 alias c="clear"
 
 # Copy pwd to clipboard
-alias cpwd="pwd | pbcopy"
+if [[ "$(uname)" == "Darwin" ]]; then
+  alias cpwd="pwd | pbcopy"
+elif command -v xclip &>/dev/null; then
+  alias cpwd="pwd | xclip -selection clipboard"
+fi
 
 # Make and change to directory
 mkcd() {
@@ -92,5 +96,9 @@ alias dps="docker ps"
 alias dimg="docker images"
 
 # ===== System =====
-alias update="brew update && brew upgrade && brew cleanup"
+if [[ "$(uname)" == "Darwin" ]]; then
+  alias update="brew update && brew upgrade && brew cleanup"
+else
+  alias update="sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y"
+fi
 alias myip="curl ifconfig.me"

@@ -4,3 +4,7 @@
 	email = YOUR_EMAIL
 	# Optional: GPG signing key (get with: gpg --list-secret-keys --keyid-format=long)
 	# signingkey = YOUR_GPG_KEY
+
+# [core]
+	# Override editor per machine (default is vim)
+	# editor = cursor --wait

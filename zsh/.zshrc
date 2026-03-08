@@ -16,10 +16,6 @@ source $ZSH/oh-my-zsh.sh
 # ===== PATH Configuration =====
 export PATH="$HOME/.local/bin:$PATH"
 
-# ===== Editor =====
-export EDITOR="cursor"
-export REACT_TERMINAL="iTerm.app"
-
 # ===== Locale =====
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
@@ -28,8 +24,7 @@ export LANG=en_US.UTF-8
 
 # NVM (Node Version Manager)
 export NVM_DIR="$HOME/.nvm"
-[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
-[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
+# Platform-specific NVM sourcing is in .zshrc.darwin / .zshrc.linux
 nvm use default --silent 2>/dev/null
 
 # Rbenv (Ruby)
@@ -58,38 +53,6 @@ export BAT_THEME="TwoDark"
 # This file is gitignored and machine-specific
 [ -f ~/.env.local ] && source ~/.env.local
 
-# Added by Antigravity
-export PATH="/Users/chris/.antigravity/antigravity/bin:$PATH"
-
-# Fastlane update_fastlane command needs this
-export GEM_HOME=~/.gems
-export PATH=$PATH:~/.gems/bin
-
-# pnpm
-export PNPM_HOME="/Users/chris/Library/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-# pnpm end
-
-# ClawdHub default install directory
-alias hub="clawdhub --dir ~/.clawdbot/skills"
-
-# bun completions
-[ -s "/Users/christian/.bun/_bun" ] && source "/Users/christian/.bun/_bun"
-
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
-
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
-
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
-
-HAUS_HOME="/Users/christian/repos"
-export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
+# ===== Platform-Specific Configuration =====
+[[ "$(uname)" == "Darwin" ]] && [ -f ~/.zshrc.darwin ] && source ~/.zshrc.darwin
+[[ "$(uname)" == "Linux" ]] && [ -f ~/.zshrc.linux ] && source ~/.zshrc.linux
