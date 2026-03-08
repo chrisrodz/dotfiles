@@ -1,0 +1,16 @@
+# Dotfiles apt packages (Linux)
+# Install with: xargs -a packages.apt sudo apt install -y
+
+zsh
+git
+curl
+vim
+tmux
+htop
+tree
+jq
+fzf
+ripgrep
+fd-find
+bat
+httpie
