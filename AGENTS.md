@@ -3,6 +3,14 @@
 Owner: Christian A. Rodriguez Encarnación
 Style: concise, telegraphic, noun-phrases ok, minimal tokens. No emojis.
 
+## Core Principles
+- Clarity > cleverness — maintainable, not impressive
+- Explicit > implicit — no magic; make behavior obvious
+- Composition > inheritance — small units that combine
+- Fail fast, fail loud — surface errors at the source
+- Delete code — less code = fewer bugs; question every addition
+- Verify, don't assume — run it, test it, prove it
+
 ## Agent Protocol
 
 - Timezone: America/Puerto_Rico (UTC-4).
@@ -16,6 +24,17 @@ Style: concise, telegraphic, noun-phrases ok, minimal tokens. No emojis.
 - Conflicts: call out; pick safer path.
 - Unrecognized changes: assume other agent; keep going; focus your changes. If it causes issues, stop + ask user.
 - Leave breadcrumb notes in thread.
+
+## Debugging
+1. Reproduce reliably.
+2. Isolate: smallest input that fails.
+3. Read the error — full stack trace.
+4. Form one hypothesis.
+5. Test it: log, write a test, inspect state.
+6. Fix and verify — change one thing.
+7. Add regression test.
+
+Don't: change multiple things at once; assume cause without evidence; fix symptoms instead of root causes.
 
 ## Workspace
 
@@ -38,10 +57,17 @@ Style: concise, telegraphic, noun-phrases ok, minimal tokens. No emojis.
 6) Accessible.
 7) Testable.
 
+## Before Writing Code
+- Restate the goal; ask if ambiguous.
+- Identify failure modes: invalid inputs, missing deps, network/IO, concurrency, resource exhaustion.
+- Classify scope: A) core flow, B) edge cases, C) out of scope (document, don't implement).
+- Check existing code — extend before creating.
+
 ## Planning
 
 - For non-trivial work, provide a short plan before editing.
 - Keep scope tight; split large files when they grow past ~500 LOC.
+- Group by feature/domain, not by layer.
 
 ## Git
 
@@ -62,6 +88,30 @@ Style: concise, telegraphic, noun-phrases ok, minimal tokens. No emojis.
 - Add regression tests when the change warrants it.
 - Before handoff: run full gate (lint/typecheck/tests/docs).
 - CI red: gh run list/view, rerun, fix, push, repeat til green.
+- Pre-submit: no commented-out code; no naked TODOs (use `// TODO: [reason] desc`); actionable error msgs; no hardcoded secrets.
+- Test behavior, not implementation. Public interface, not private details.
+- Unit tests by default. Integration tests for: critical paths, complex interactions, external service contracts.
+
+## Code Style
+- Functions: max 3-4 params; beyond that use a config object.
+- Avoid boolean params — they obscure intent at call sites.
+- Comments explain WHY, not WHAT. Delete comments that restate code.
+- TODO format: `// TODO: [context] description`
+
+## Error Handling
+- Define domain-specific error types per module.
+- Include context: what failed, with what inputs (IDs, paths, values).
+- Map external errors at boundaries — don't leak implementation details.
+- Fail at the source; don't pass invalid state downstream.
+
+## Refactoring
+- Refactor before adding a feature (make the change easy, then make the easy change).
+- Never change behavior and structure in the same step.
+- Don't refactor while debugging or without test coverage.
+- "While I'm here" changes: separate commit or ticket.
+
+## Dependencies
+Before adding: can we solve this in <100 lines? Is it maintained? Transitive cost? License? Abandonment risk?
 
 ## Tooling
 
@@ -71,6 +121,13 @@ Style: concise, telegraphic, noun-phrases ok, minimal tokens. No emojis.
   - Claude repo: `.claude/commands/`
   - Cursor repo: `.cursor/commands/`
   - Cursor global: `~/.cursor/commands/`
+
+## Token Efficiency
+- Never re-read files you just wrote or edited.
+- Never re-run commands to verify unless outcome was uncertain.
+- Don't echo large blocks of code unless asked.
+- Batch related edits — don't make 5 edits when 1 handles it.
+- Don't summarize what you just did unless result is ambiguous.
 
 ## Notes
 
