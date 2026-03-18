@@ -285,6 +285,23 @@ if command -v npx &> /dev/null; then
   npx skills add --global -y expo/skills@native-data-fetching 2>/dev/null || true
   npx skills add --global -y expo/skills@upgrading-expo 2>/dev/null || true
   npx skills add --global -y expo/skills@use-dom 2>/dev/null || true
+  # Callstack - React Native device interaction
+  npx skills add --global -y callstackincubator/agent-device@agent-device 2>/dev/null || true
+  # Obsidian - vault management, markdown, bases, canvas, defuddle
+  npx skills add --global -y kepano/obsidian-skills@obsidian-cli 2>/dev/null || true
+  npx skills add --global -y kepano/obsidian-skills@obsidian-markdown 2>/dev/null || true
+  npx skills add --global -y kepano/obsidian-skills@obsidian-bases 2>/dev/null || true
+  npx skills add --global -y kepano/obsidian-skills@json-canvas 2>/dev/null || true
+  npx skills add --global -y kepano/obsidian-skills@defuddle 2>/dev/null || true
+  # Ensure all skills are symlinked into Claude Code
+  mkdir -p "$HOME/.claude/skills"
+  for skill_dir in "$HOME/.agents/skills"/*/; do
+    skill_name=$(basename "$skill_dir")
+    if [ ! -e "$HOME/.claude/skills/$skill_name" ]; then
+      ln -sf "$skill_dir" "$HOME/.claude/skills/$skill_name"
+      print_success "Linked skill $skill_name to Claude Code"
+    fi
+  done
   print_success "Global skills installed to ~/.agents/skills/"
 else
   print_warning "npx not found, skipping skills installation"
