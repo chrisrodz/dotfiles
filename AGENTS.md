@@ -24,6 +24,7 @@ Style: concise, telegraphic, noun-phrases ok, minimal tokens. No emojis.
 - Conflicts: call out; pick safer path.
 - Unrecognized changes: assume other agent; keep going; focus your changes. If it causes issues, stop + ask user.
 - Leave breadcrumb notes in thread.
+- Never create, modify, or delete Coolify resources without explicit user approval first. Read-only inspection is fine; writes require a direct yes in the current thread.
 
 ## Debugging
 1. Reproduce reliably.

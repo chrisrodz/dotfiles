@@ -56,3 +56,6 @@ export BAT_THEME="TwoDark"
 # ===== Platform-Specific Configuration =====
 [[ "$(uname)" == "Darwin" ]] && [ -f ~/.zshrc.darwin ] && source ~/.zshrc.darwin
 [[ "$(uname)" == "Linux" ]] && [ -f ~/.zshrc.linux ] && source ~/.zshrc.linux
+
+# OpenClaw Completion
+source "/Users/chris/.openclaw/completions/openclaw.zsh"
