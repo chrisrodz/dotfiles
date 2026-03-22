@@ -297,6 +297,8 @@ if command -v npx &> /dev/null; then
   npx skills add --global -y pbakaus/impeccable 2>/dev/null || true
   npx skills add --global -y Dammyjay93/interface-design 2>/dev/null || true
   npx skills add --global -y ibelick/ui-skills 2>/dev/null || true
+  # OpenAI official frontend skill (GPT-5.4 optimized)
+  npx skills add --global -y openai/skills@frontend-skill 2>/dev/null || true
   # Ensure all skills are symlinked into Claude Code
   mkdir -p "$HOME/.claude/skills"
   for skill_dir in "$HOME/.agents/skills"/*/; do
