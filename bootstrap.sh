@@ -261,7 +261,7 @@ if command -v npx &> /dev/null; then
   npx skills add --global -y steipete/agent-scripts@nano-banana-pro 2>/dev/null || true
   npx skills add --global -y steipete/agent-scripts@openai-image-gen 2>/dev/null || true
   npx skills add --global -y steipete/agent-scripts@create-cli 2>/dev/null || true
-  npx skills add --global -y steipete/agent-scripts@frontend-design 2>/dev/null || true
+  # frontend-design removed — replaced by openai/skills@frontend-skill which is more complete
   npx skills add --global -y steipete/agent-scripts@instruments-profiling 2>/dev/null || true
   npx skills add --global -y steipete/agent-scripts@markdown-converter 2>/dev/null || true
   npx skills add --global -y steipete/agent-scripts@native-app-performance 2>/dev/null || true
