@@ -71,7 +71,7 @@ def search_web(
         json_data=payload,
         headers={
             "Authorization": f"Bearer {api_key}",
-            "HTTP-Referer": "https://github.com/mvanhorn/last30days-openclaw",
+            "HTTP-Referer": "https://github.com/mvanhorn/last30days-skill",
             "X-Title": "last30days",
         },
         timeout=30,

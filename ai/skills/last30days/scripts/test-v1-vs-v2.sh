@@ -32,8 +32,8 @@ echo ""
 # All 17 test queries
 QUERIES=(
   "prompting techniques for chatgpt for legal questions"
-  "best clawdbot use cases"
-  "how to best setup clawdbot"
+  "best self-hosted ai assistant use cases"
+  "how to best setup a self-hosted ai assistant"
   "prompting tips for nano banana pro for ios designs"
   "top claude code skills"
   "using ChatGPT to make images of dogs"
@@ -46,7 +46,7 @@ QUERIES=(
   "how do I use Codex with Claude Code on same app to make it better"
   "kanye west"
   "howie.ai"
-  "open claw"
+  "open source ai agents"
   "nano banana pro prompting"
 )
 

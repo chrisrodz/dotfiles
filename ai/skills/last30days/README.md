@@ -6,12 +6,6 @@
 /plugin install last30days@last30days-skill
 ```
 
-[![ClawHub](https://img.shields.io/badge/ClawHub-last30days--official-blue)](https://clawhub.ai/skills/last30days-official)
-
-```bash
-clawhub install last30days-official
-```
-
 **The AI world reinvents itself every month. This skill keeps you current.** /last30days researches your topic across Reddit, X, Bluesky, YouTube, TikTok, Instagram, Hacker News, Polymarket, and the web from the last 30 days, finds what the community is actually upvoting, sharing, betting on, and saying on camera, and writes you a grounded narrative with real citations. Whether it's Seedance 2.0 access, paper.design prompts, or the latest Nano Banana Pro techniques, you'll know what people who are paying attention already know.
 
 **New in v2.9.5 — Bluesky, Comparative Mode, and Config Improvements:**
@@ -112,11 +106,11 @@ git clone https://github.com/mvanhorn/last30days-skill.git ~/.agents/skills/last
 
 Same SKILL.md, same Python engine, same scripts. The `agents/openai.yaml` provides Codex-specific discovery metadata. Invoke with `$last30days` or through the `/skills` menu.
 
-### Open Variant (Watchlist + Briefings)  - For Always-On Bots
+### Watchlists + Briefings
 
-**Designed for [Open Claw](https://github.com/openclaw/openclaw) and similar always-on AI environments.** Add your competitors, specific people, or any topic to a watchlist. When paired with a cron job or always-on bot, /last30days re-researches them on a schedule and accumulates findings in a local SQLite database. Ask for a briefing anytime.
+Add your competitors, specific people, or any topic to a watchlist. When paired with cron, launchd, or another scheduler, /last30days re-researches them on a schedule and accumulates findings in a local SQLite database. Ask for a briefing anytime.
 
-**Important:** The watchlist stores schedules as metadata, but nothing triggers runs automatically. You need an external scheduler (cron, launchd, or an always-on bot like Open Claw) to call `watchlist.py run-all` on a timer. In plain Claude Code, you can run `watch run-one` and `watch run-all` manually, but there's no background scheduling.
+**Important:** The watchlist stores schedules as metadata, but nothing triggers runs automatically. You need an external scheduler to call `watchlist.py run-all` on a timer. In Claude Code, you can run `watch run-one` and `watch run-all` manually, but there's no background scheduling.
 
 ```bash
 # Enable the open variant
@@ -397,12 +391,12 @@ This example shows /last30days learning **domain-specific prompting techniques**
 
 ---
 
-## Example: ClawdBot Use Cases (Community Research)
+## Example: Self-Hosted AI Assistant Use Cases (Community Research)
 
-**Query:** `/last30days best clawdbot use cases`
+**Query:** `/last30days best self-hosted ai assistant use cases`
 
 **Research Output:**
-> ClawdBot is a self-hosted AI assistant that runs on your devices and connects via messaging apps (Telegram, WhatsApp, Discord, Slack, iMessage). Unlike ChatGPT/Claude, it has persistent memory and can proactively message you. The killer feature is its 24/7 autonomous operation - it handles multi-day tasks, monitors for replies, and initiates contact.
+> Self-hosted AI assistants run on your devices and connect via messaging apps (Telegram, WhatsApp, Discord, Slack, iMessage). Unlike hosted chat apps, they can keep local state and proactively message you. The killer feature is 24/7 autonomous operation - handling multi-day tasks, monitoring for replies, and initiating contact.
 
 **Most mentioned use cases:**
 
@@ -432,12 +426,12 @@ This example shows /last30days as a **product research tool** - discovering real
 
 ---
 
-## Example: ClawdBot Setup (Installation Guide)
+## Example: Self-Hosted AI Assistant Setup (Installation Guide)
 
-**Query:** `/last30days how to best setup clawdbot`
+**Query:** `/last30days how to best setup a self-hosted ai assistant`
 
 **Research Output:**
-> ClawdBot setup varies by deployment style - Docker is the most recommended path, but users are also deploying via bare metal and cloud VMs. The community has converged on key best practices: use the setup wizard for initial config, start with conservative hardware (you can scale up), and configure authentication before exposing any endpoints.
+> Setup varies by deployment style - Docker is the most recommended path, but users are also deploying via bare metal and cloud VMs. The community has converged on key best practices: use setup wizards for initial config, start with conservative hardware (you can scale up), and configure authentication before exposing any endpoints.
 
 **🛠️ Setup patterns by engagement:**
 
@@ -454,25 +448,18 @@ This example shows /last30days as a **product research tool** - discovering real
 1. **Use the setup wizard** - Don't manually edit config files first; the wizard handles 90% of initial setup
 2. **Start small on hardware** - 8GB RAM minimum, but 16GB+ recommended if running local models
 3. **Docker > bare metal** - Easier updates, better isolation, community-tested compose files
-4. **Secure before exposing** - Set up authentication before opening ports; ClawdBot has built-in auth
+4. **Secure before exposing** - Set up authentication before opening ports
 5. **Cost management** - Set API rate limits early; one user reported $200 overnight bill from runaway tasks
 
 **Quick-start commands (community-verified):**
 
 ```bash
-# Clone and setup
-git clone https://github.com/clawdbot/clawdbot.git
-cd clawdbot
-
-# Run setup wizard (recommended)
-./setup.sh
-
-# Or Docker Compose (after config)
+# Docker Compose (after config)
 docker compose up -d
 ```
 
 **Common gotchas mentioned:**
-- Don't forget to set `CLAWDBOT_API_KEY` before first run
+- Don't forget to set required API keys before first run
 - Telegram bot token needs BotFather setup first
 - If using local models, ensure CUDA drivers are installed
 
@@ -998,7 +985,7 @@ Subreddit discovery now uses relevance-weighted scoring instead of pure frequenc
 
 | Topic | Before (v2.8) | After (v2.9) |
 |-------|---------------|--------------|
-| Claude Code skills | Generic programming subs | r/ClaudeAI, r/ClaudeCode, r/openclaw |
+| Claude Code skills | Generic programming subs | r/ClaudeAI, r/ClaudeCode |
 | Kanye West | r/AskReddit, r/OutOfTheLoop | r/hiphopheads, r/Kanye, r/NFCWestMemeWar |
 | Nano Banana Pro | r/techsupport, r/whatisthisthing | r/GeminiAI, r/nanobanana2pro, r/macbookpro |
 
@@ -1018,7 +1005,7 @@ Top comments now carry a 10% weight in the engagement scoring formula and are di
 
 | Topic | Time | Threads | Discovered Subreddits |
 |-------|------|---------|----------------------|
-| Claude Code skills | 77.1s | 99 | r/ClaudeAI, r/ClaudeCode, r/openclaw |
+| Claude Code skills | 77.1s | 99 | r/ClaudeAI, r/ClaudeCode |
 | Kanye West | 71.7s | 84 | r/hiphopheads, r/NFCWestMemeWar, r/Kanye |
 | Anthropic odds | 68.0s | 65 | r/Anthropic, r/ClaudeAI, r/OpenAI |
 | Best rap songs lately | 68.9s | 114 | r/BestofRedditorUpdates, r/rap, r/TeenageRapFans |
@@ -1125,7 +1112,7 @@ No extra API keys needed - uses the agent's built-in WebSearch (available to 100
 
 **The biggest feature in v2.1 isn't a new source  - it's what happens when you pair /last30days with an always-on bot.** The open variant adds a watchlist, briefings, and history. Add `"Competitor X"` to your watchlist, set it to weekly, and when your bot's cron job fires every Monday, you get a research briefing  - what they shipped, what people said about it, what Reddit and X are discussing. The research accumulates in a local SQLite database, and you can query it anytime with natural language.
 
-**Designed for [Open Claw](https://github.com/openclaw/openclaw) and similar always-on environments.** The watchlist stores schedules as metadata  - you need cron, launchd, or a persistent bot to actually trigger runs. In Claude Code you can still use `run-one` and `run-all` manually.
+The watchlist stores schedules as metadata - you need cron, launchd, or another scheduler to actually trigger runs. In Claude Code you can still use `run-one` and `run-all` manually.
 
 ### YouTube search with transcripts (v2.1)
 
@@ -1165,7 +1152,7 @@ V2 finds significantly more content than V1. Two major improvements:
 
 **Smarter query construction** - V1 sent overly specific queries to X search (literal keyword AND matching), causing 0 results on topics that were actively trending. V2 aggressively strips research/meta words ("best", "prompt", "techniques", "tips") and question prefixes ("what are people saying about") to extract just the core topic. Example: `"vibe motion best prompt techniques"` now searches for `"vibe motion"` instead of `"vibe motion prompt techniques"` - going from 0 posts to 12+. Automatically retries with fewer keywords if the first attempt returns nothing.
 
-**Smart supplemental search (Phase 2)** - After the initial broad search, extracts key @handles and subreddits from the results, then runs targeted follow-up searches to find content that keyword search alone misses. Example: researching "Open Claw" automatically discovers @openclaw, @steipete and drills into their posts. For Reddit, it hits the free `.json` search endpoint scoped to discovered subreddits - no extra API keys needed.
+**Smart supplemental search (Phase 2)** - After the initial broad search, extracts key @handles and subreddits from the results, then runs targeted follow-up searches to find content that keyword search alone misses. For Reddit, it hits the free `.json` search endpoint scoped to discovered subreddits - no extra API keys needed.
 
 **Reddit JSON enrichment** - Fetches real upvote and comment counts from Reddit's free API for every thread, giving you actual engagement signals instead of estimates.
 
@@ -1212,4 +1199,4 @@ Each API key is transmitted only to its respective endpoint. Your OpenAI key is 
 
 *30 days of research. 30 seconds of work. Eight sources. Zero stale prompts.*
 
-*Pair with [Open Claw](https://github.com/openclaw/openclaw) for automated watchlists and briefings. Reddit. X. YouTube. TikTok. Instagram. Web. — All synthesized into expert answers and copy-paste prompts.*
+*Reddit. X. YouTube. TikTok. Instagram. Web. All synthesized into expert answers and copy-paste prompts.*

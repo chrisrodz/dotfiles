@@ -537,7 +537,7 @@ def get_instagram_token(config: Dict[str, Any]) -> str:
 def get_xiaohongshu_api_base(config: Dict[str, Any]) -> str:
     """Get Xiaohongshu HTTP API base URL.
 
-    Defaults to host.docker.internal so OpenClaw Docker can reach host service.
+    Defaults to host.docker.internal so containerized agents can reach the host service.
     """
     return (config.get('XIAOHONGSHU_API_BASE') or "http://host.docker.internal:18060").rstrip("/")
 

@@ -10,7 +10,7 @@ The AI world reinvents itself every month. This skill keeps you current.
 
 **1. ScrapeCreators Reddit as default.** One `SCRAPECREATORS_API_KEY` now covers Reddit, TikTok, and Instagram - three sources, one key. No more `OPENAI_API_KEY` required for Reddit search. Faster, more reliable, and simpler to configure.
 
-**2. Smart subreddit discovery.** Relevance-weighted scoring replaces pure frequency count. Each candidate subreddit is scored by `frequency x recency x topic-word match`, and a `UTILITY_SUBS` blocklist filters noise subs like r/tipofmytongue. Search "Claude Code skills" and get r/ClaudeAI, r/ClaudeCode, r/openclaw - not generic programming subs.
+**2. Smart subreddit discovery.** Relevance-weighted scoring replaces pure frequency count. Each candidate subreddit is scored by `frequency x recency x topic-word match`, and a `UTILITY_SUBS` blocklist filters noise subs like r/tipofmytongue. Search "Claude Code skills" and get r/ClaudeAI, r/ClaudeCode - not generic programming subs.
 
 **3. Top comments elevated.** The best comment on each Reddit thread now carries a 10% weight in engagement scoring and displays prominently with upvote counts. Reddit's value is in the comments - now the skill surfaces them.
 
@@ -20,7 +20,7 @@ Plus: **Instagram Reels** (v2.8), **Polymarket prediction markets** (v2.5), **Yo
 
 | Topic | Time | Threads | Discovered Subreddits |
 |-------|------|---------|----------------------|
-| Claude Code skills | 77.1s | 99 | r/ClaudeAI, r/ClaudeCode, r/openclaw |
+| Claude Code skills | 77.1s | 99 | r/ClaudeAI, r/ClaudeCode |
 | Kanye West | 71.7s | 84 | r/hiphopheads, r/NFCWestMemeWar, r/Kanye |
 | Anthropic odds | 68.0s | 65 | r/Anthropic, r/ClaudeAI, r/OpenAI |
 | Best rap songs lately | 68.9s | 114 | r/BestofRedditorUpdates, r/rap, r/TeenageRapFans |
