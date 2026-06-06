@@ -185,8 +185,7 @@ Skills install once to `~/.agents/skills/`, then bootstrap wires them per agent:
 - **Claude Code** — symlinked into `~/.claude/skills/`
 - **Codex** — symlinked into `~/.codex/skills/`
 - **Hermes** — reads `~/.agents/skills` directly via `skills.external_dirs` in
-  `~/.hermes/config.yaml`; shared `AGENTS.md` rules are synced into a managed
-  block in `~/.hermes/SOUL.md` (your own SOUL.md content is preserved)
+  `~/.hermes/config.yaml`
 
 ### Global Skills (installed by bootstrap)
 
@@ -250,4 +249,4 @@ Useful Matt Pocock skills include `/grill-me`, `/grill-with-docs`, `/diagnose`, 
 
 - `claude-code` - Global Claude Code CLI installed via Homebrew for Anthropic workflows
 - `codex-cli` - Global OpenAI Codex CLI installed via Homebrew for Codex CLI tooling
-- `hermes` - Nous Research Hermes agent; reads global skills via `external_dirs` and shares `AGENTS.md` rules through `SOUL.md`
+- `hermes` - Nous Research Hermes agent; reads global skills via `external_dirs`

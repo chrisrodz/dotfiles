@@ -374,14 +374,10 @@ else
   print_warning "npx not found, skipping skills installation"
 fi
 
-# ===== Hermes Agent (skills + shared AGENTS.md rules) =====
-# Hermes reads ~/.agents/skills via external_dirs and uses SOUL.md as its
-# system identity. We expose all global skills and sync the shared AGENTS.md
-# engineering rules into a managed block in SOUL.md (your own SOUL.md content
-# above/below the markers is preserved).
+# ===== Hermes Agent (skills) =====
+# Hermes reads global skills from ~/.agents/skills via external_dirs.
 if command -v hermes &> /dev/null && [ -f "$HOME/.hermes/config.yaml" ]; then
   echo "Wiring Hermes agent..."
-
   if command -v yq &> /dev/null; then
     cp "$HOME/.hermes/config.yaml" "$HOME/.hermes/config.yaml.bak.$(date +%Y%m%d-%H%M%S)"
     yq -i '.skills.external_dirs = ((.skills.external_dirs // []) + ["~/.agents/skills"] | unique)' "$HOME/.hermes/config.yaml"
@@ -389,26 +385,6 @@ if command -v hermes &> /dev/null && [ -f "$HOME/.hermes/config.yaml" ]; then
   else
     print_warning "yq not found; skipping Hermes external_dirs wiring"
   fi
-
-  HERMES_SOUL="$HOME/.hermes/SOUL.md"
-  SOUL_BEGIN="<!-- BEGIN dotfiles-agents-md (managed by bootstrap) -->"
-  SOUL_END="<!-- END dotfiles-agents-md (managed by bootstrap) -->"
-  touch "$HERMES_SOUL"
-  soul_tmp=$(mktemp)
-  # Strip any prior managed block, then re-append the current AGENTS.md
-  awk -v b="$SOUL_BEGIN" -v e="$SOUL_END" '
-    $0==b{skip=1} !skip{print} $0==e{skip=0}' "$HERMES_SOUL" > "$soul_tmp"
-  {
-    cat "$soul_tmp"
-    echo ""
-    echo "$SOUL_BEGIN"
-    echo "# Shared engineering rules (synced from ~/repos/dotfiles/AGENTS.md)"
-    echo ""
-    cat "$DOTFILES_DIR/AGENTS.md"
-    echo "$SOUL_END"
-  } > "$HERMES_SOUL"
-  rm -f "$soul_tmp"
-  print_success "Synced AGENTS.md into Hermes SOUL.md (managed block)"
 else
   print_warning "Hermes not installed or not initialized; skipping Hermes wiring"
 fi

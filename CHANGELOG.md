@@ -5,7 +5,7 @@
 - Made `bootstrap.sh` additive and non-destructive: it never replaces an existing file without consent. Conflicts prompt `[y/N/a]` interactively, skip when run non-interactively, or overwrite with `--yolo`/`-y` (backups still kept). New files/symlinks are added silently.
 - Added `agent-device` (Callstack React Native device interaction) to the default mobile skills.
 - Added default skills for the mobile/web stack: React + Next.js and React Native (Vercel Engineering), Vercel optimization, and Cloudflare (Workers, Wrangler, platform). Covers the new mobile app's stack out of the box.
-- Wired global skills into all three coding agents: Claude (`~/.claude/skills`), Codex (`~/.codex/skills`), and Hermes (`~/.hermes/config.yaml` `external_dirs` + `AGENTS.md` synced into a managed block in `SOUL.md`).
+- Wired global skills into all three coding agents: Claude (`~/.claude/skills`), Codex (`~/.codex/skills`), and Hermes (`~/.hermes/config.yaml` `external_dirs`).
 - Reconciled `bootstrap.sh` to be the true source of truth: grouped the skill list by domain, removed dead refs that never installed (Obsidian pack, callstack `agent-device`), and added in-use skills (remotion, last30days).
 - Added `asc` (App Store Connect CLI) to the Brewfile; it ships the `asc-*` iOS skills (TestFlight, metadata, release).
 - Removed the bundled `ai/skills/last30days/` (~200 files); now installed from the `mvanhorn/last30days-skill` registry instead.
