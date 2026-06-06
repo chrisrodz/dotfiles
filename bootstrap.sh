@@ -9,7 +9,25 @@ DOTFILES_DIR="$HOME/repos/dotfiles"
 BACKUP_DIR="$HOME/dotfiles-backup-$(date +%Y%m%d-%H%M%S)"
 OS="$(uname -s)"
 
+# Conflict behavior:
+#   default  - additive & non-destructive. New things are added silently;
+#              anything that would REPLACE an existing file prompts you to
+#              decide (or is skipped when running non-interactively).
+#   --yolo   - overwrite anything in the way (existing files are backed up first).
+YOLO=0
+for arg in "$@"; do
+  case "$arg" in
+    --yolo|-y|--force) YOLO=1 ;;
+    -h|--help)
+      echo "Usage: ./bootstrap.sh [--yolo]"
+      echo "  --yolo, -y   Overwrite conflicting files without asking (backs up first)."
+      echo "  (default)    Additive: never replace an existing file without your OK."
+      exit 0 ;;
+  esac
+done
+
 echo "Starting dotfiles setup... (detected OS: $OS)"
+[ "$YOLO" = "1" ] && echo "Running in --yolo mode: conflicts will be overwritten (with backup)."
 
 # Colors
 GREEN='\033[0;32m'
@@ -31,25 +49,54 @@ print_error() {
 
 # Backup existing files
 backup_if_exists() {
-  if [ -f "$1" ] || [ -d "$1" ]; then
+  if [ -e "$1" ] || [ -L "$1" ]; then
     mkdir -p "$BACKUP_DIR"
     mv "$1" "$BACKUP_DIR/"
     print_warning "Backed up $1 to $BACKUP_DIR"
   fi
 }
 
-# Create symlink (idempotent - skips if already correct)
+# Decide whether we may replace an existing target.
+# Returns 0 = go ahead (caller should back up + replace), 1 = leave it alone.
+# --yolo: always replace. Non-interactive: skip (stay additive). TTY: ask.
+may_replace() {
+  local target=$1
+  if [ "$YOLO" = "1" ]; then
+    return 0
+  fi
+  if [ ! -t 0 ]; then
+    print_warning "Exists, left unchanged (rerun with --yolo to overwrite): $target"
+    return 1
+  fi
+  local reply
+  printf "%bREPLACE?%b %s already exists. Overwrite (backup kept)? [y/N/a=yes-to-all] " \
+    "$YELLOW" "$NC" "$target" > /dev/tty
+  read -r reply < /dev/tty
+  case "$reply" in
+    a|A) YOLO=1; return 0 ;;
+    y|Y) return 0 ;;
+    *)   print_warning "Skipped (left existing): $target"; return 1 ;;
+  esac
+}
+
+# Create symlink. Additive & non-destructive: adds when absent, only replaces
+# an existing different target with your consent (or --yolo).
 create_symlink() {
   local source=$1
   local target=$2
 
-  # If target is already a symlink pointing to the correct source, skip
+  # Already the correct symlink? Nothing to do.
   if [ -L "$target" ] && [ "$(readlink "$target")" = "$source" ]; then
     print_success "Already linked $target"
     return 0
   fi
 
-  backup_if_exists "$target"
+  # Target occupied by something else (real file/dir or wrong symlink): ask.
+  if [ -e "$target" ] || [ -L "$target" ]; then
+    may_replace "$target" || return 0
+    backup_if_exists "$target"
+  fi
+
   ln -sf "$source" "$target"
   print_success "Linked $target"
 }
@@ -254,28 +301,33 @@ done
 # ===== Install Global Skills =====
 echo "Installing global agent skills..."
 if command -v npx &> /dev/null; then
-  # Core skills from public registries (installed to ~/.agents/skills/)
-  # From steipete/agent-scripts
+  # `npx skills add --global` installs to ~/.agents/skills/ and wires each skill
+  # into Claude, Codex, Hermes (and ~30 other agents) automatically — no manual
+  # fan-out or per-agent config needed. Local skills under ai/skills/ install the
+  # same way by passing their repo path (see the local-skills loop below).
+
+  # --- Core utilities (steipete/agent-scripts) ---
   npx skills add --global -y steipete/agent-scripts@video-transcript-downloader 2>/dev/null || true
   npx skills add --global -y steipete/agent-scripts@brave-search 2>/dev/null || true
   npx skills add --global -y steipete/agent-scripts@nano-banana-pro 2>/dev/null || true
   npx skills add --global -y steipete/agent-scripts@openai-image-gen 2>/dev/null || true
   npx skills add --global -y steipete/agent-scripts@create-cli 2>/dev/null || true
-  # frontend-design removed — replaced by openai/skills@frontend-skill which is more complete
   npx skills add --global -y steipete/agent-scripts@instruments-profiling 2>/dev/null || true
   npx skills add --global -y steipete/agent-scripts@markdown-converter 2>/dev/null || true
   npx skills add --global -y steipete/agent-scripts@native-app-performance 2>/dev/null || true
-  # From other registries
-  npx skills add --global -y vercel-labs/agent-browser@agent-browser 2>/dev/null || true
-  # Local skills (not in any public registry) - symlinked from this repo
-  mkdir -p "$HOME/.agents/skills"
-  mkdir -p "$HOME/.claude/skills"
-  create_symlink "$DOTFILES_DIR/ai/skills/polishing-issues" "$HOME/.agents/skills/polishing-issues"
-  create_symlink "$HOME/.agents/skills/polishing-issues" "$HOME/.claude/skills/polishing-issues"
-  npx skills add --global -y agentmail-to/agentmail-skills@agentmail 2>/dev/null || true
-  # Resend (email sending platform) - umbrella skill routes to send-email/resend-inbound
-  npx skills add --global -y resend/resend-skills@resend 2>/dev/null || true
-  # Expo (React Native framework) - official skills from expo/skills
+
+  # --- Web & cloud stacks ---
+  # React / Next.js / React Native (Vercel Engineering, official)
+  npx skills add --global -y vercel-labs/agent-skills@vercel-react-best-practices 2>/dev/null || true
+  npx skills add --global -y vercel-labs/agent-skills@vercel-react-native-skills 2>/dev/null || true
+  npx skills add --global -y vercel-labs/agent-skills@vercel-optimize 2>/dev/null || true
+  # Cloudflare (Workers, Pages, KV/D1/R2, Agents SDK — official)
+  npx skills add --global -y cloudflare/skills@cloudflare 2>/dev/null || true
+  npx skills add --global -y cloudflare/skills@workers-best-practices 2>/dev/null || true
+  npx skills add --global -y cloudflare/skills@wrangler 2>/dev/null || true
+
+  # --- Mobile / native (Expo — official) ---
+  # iOS App Store Connect skills (asc-*) ship with the `asc` CLI (see Brewfile), not here.
   npx skills add --global -y expo/skills@building-native-ui 2>/dev/null || true
   npx skills add --global -y expo/skills@expo-api-routes 2>/dev/null || true
   npx skills add --global -y expo/skills@expo-cicd-workflows 2>/dev/null || true
@@ -285,33 +337,51 @@ if command -v npx &> /dev/null; then
   npx skills add --global -y expo/skills@native-data-fetching 2>/dev/null || true
   npx skills add --global -y expo/skills@upgrading-expo 2>/dev/null || true
   npx skills add --global -y expo/skills@use-dom 2>/dev/null || true
-  # Callstack - React Native device interaction
+  # React Native device interaction (Callstack)
   npx skills add --global -y callstackincubator/agent-device@agent-device 2>/dev/null || true
-  # Obsidian - vault management, markdown, bases, canvas, defuddle
-  npx skills add --global -y kepano/obsidian-skills@obsidian-cli 2>/dev/null || true
-  npx skills add --global -y kepano/obsidian-skills@obsidian-markdown 2>/dev/null || true
-  npx skills add --global -y kepano/obsidian-skills@obsidian-bases 2>/dev/null || true
-  npx skills add --global -y kepano/obsidian-skills@json-canvas 2>/dev/null || true
-  npx skills add --global -y kepano/obsidian-skills@defuddle 2>/dev/null || true
-  # UI Design Skills (frontend polish, accessibility, design systems)
+
+  # --- Design & frontend polish ---
+  npx skills add --global -y openai/skills@frontend-skill 2>/dev/null || true
   npx skills add --global -y pbakaus/impeccable 2>/dev/null || true
   npx skills add --global -y Dammyjay93/interface-design 2>/dev/null || true
   npx skills add --global -y ibelick/ui-skills 2>/dev/null || true
-  # OpenAI official frontend skill (GPT-5.4 optimized)
-  npx skills add --global -y openai/skills@frontend-skill 2>/dev/null || true
-  # Ensure all skills are symlinked into Claude Code
-  mkdir -p "$HOME/.claude/skills"
-  for skill_dir in "$HOME/.agents/skills"/*/; do
-    skill_name=$(basename "$skill_dir")
-    if [ ! -e "$HOME/.claude/skills/$skill_name" ]; then
-      ln -sf "$skill_dir" "$HOME/.claude/skills/$skill_name"
-      print_success "Linked skill $skill_name to Claude Code"
-    fi
+
+  # --- Integrations & media ---
+  npx skills add --global -y vercel-labs/agent-browser@agent-browser 2>/dev/null || true
+  npx skills add --global -y agentmail-to/agentmail-skills@agentmail 2>/dev/null || true
+  npx skills add --global -y resend/resend-skills@resend 2>/dev/null || true
+  npx skills add --global -y remotion-dev/skills@remotion-best-practices 2>/dev/null || true
+
+  # --- Research & async coding workflows ---
+  npx skills add --global -y mattpocock/skills 2>/dev/null || true
+  npx skills add --global -y mvanhorn/last30days-skill@last30days 2>/dev/null || true
+
+  # --- Local skills (no public registry) — installed from this repo ---
+  # Same CLI path as registry skills, so the Skills CLI wires them into every
+  # agent too (Claude, Codex, Hermes, ...).
+  for local_skill in "$DOTFILES_DIR"/ai/skills/*/; do
+    [ -d "$local_skill" ] || continue
+    npx skills add --global -y "${local_skill%/}" 2>/dev/null || true
   done
-  print_success "Global skills installed to ~/.agents/skills/"
+  print_success "Global skills installed (Skills CLI wired them into all agents)"
 else
   print_warning "npx not found, skipping skills installation"
 fi
+
+# ===== iOS skills (asc CLI) — mirror into Codex + Hermes =====
+# npx-installed skills reach every agent via the Skills CLI. The asc-* iOS skills
+# are different: the `asc` CLI registers them into ~/.agents/skills and Claude
+# only, so mirror just those into Codex and Hermes (additive — never clobbers).
+asc_synced=0
+for asc_skill in "$HOME"/.agents/skills/asc-*/; do
+  [ -d "$asc_skill" ] || continue
+  name=$(basename "$asc_skill")
+  for agent_skills in "$HOME/.codex/skills" "$HOME/.hermes/skills"; do
+    [ -d "$agent_skills" ] || continue
+    [ -e "$agent_skills/$name" ] || { ln -sf "$asc_skill" "$agent_skills/$name"; asc_synced=1; }
+  done
+done
+[ "$asc_synced" = "1" ] && print_success "Mirrored asc-* iOS skills into Codex + Hermes"
 
 # ===== Environment Setup =====
 if [ ! -f "$HOME/.env.local" ]; then
