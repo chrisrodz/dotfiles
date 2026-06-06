@@ -39,13 +39,21 @@ cd ~/repos/dotfiles
 
 ### Is it Safe to Rerun?
 
-**Yes.** The bootstrap script:
+**Yes.** The bootstrap script is **additive and non-destructive** by default:
 
-- Creates timestamped backups (`~/dotfiles-backup-YYYYMMDD-HHMMSS`) before overwriting any files
-- Checks if tools are already installed before installing
-- Prompts for git user.name and email (skip if already set)
+- New files/symlinks are added silently; an existing file is **never replaced without your OK**
+- When something would be overwritten, it prompts `[y/N/a]` (yes / skip / yes-to-all)
+- Running non-interactively (piped/CI) **skips** any conflict instead of clobbering
+- `--yolo` (or `-y`) overwrites conflicts without asking — existing files are still backed up first
+- Backups go to `~/dotfiles-backup-YYYYMMDD-HHMMSS`
+- Checks if tools are already installed before installing; prompts for git name/email only if unset
 
-Rerun anytime to update symlinks or install missing packages.
+```bash
+./bootstrap.sh          # additive: ask before replacing anything
+./bootstrap.sh --yolo   # overwrite conflicts (backups still kept)
+```
+
+Rerun anytime to install missing packages or skills and refresh symlinks.
 
 ### Considerations
 
@@ -162,36 +170,48 @@ gh repo sync
 
 ### Agent Instructions and Commands
 
-- Canonical rules: `AGENTS.md`
+- Canonical rules: `AGENTS.md` (shared by Claude, Codex, Cursor, Hermes)
 - Pointer for Claude: `claude/CLAUDE.md`
 - Codex config: `ai/codex-config.toml` (model settings, copied to `~/.codex/config.toml`)
 - Commands: `ai/commands` (symlinked to `~/.codex/prompts`, `~/.claude/commands`, `~/.cursor/commands`)
-- Skills: Installed globally via `npx skills add --global <skill>`
+- Skills: installed globally to `~/.agents/skills/` (cross-agent standard), then fanned out
 
-Bootstrap wires the symlinks and installs global skills.
+Bootstrap wires the symlinks, installs global skills, and exposes them to every agent.
+
+### How skills reach each agent
+
+Skills install once to `~/.agents/skills/`, then bootstrap wires them per agent:
+
+- **Claude Code** — symlinked into `~/.claude/skills/`
+- **Codex** — symlinked into `~/.codex/skills/`
+- **Hermes** — reads `~/.agents/skills` directly via `skills.external_dirs` in
+  `~/.hermes/config.yaml`; shared `AGENTS.md` rules are synced into a managed
+  block in `~/.hermes/SOUL.md` (your own SOUL.md content is preserved)
 
 ### Global Skills (installed by bootstrap)
 
-Skills are installed globally to `~/.agents/skills/` from public registries:
+Grouped by domain — the canonical list lives in `bootstrap.sh`:
 
 ```bash
-# From steipete/agent-scripts
+# Core utilities (steipete/agent-scripts)
 npx skills add --global -y steipete/agent-scripts@video-transcript-downloader
 npx skills add --global -y steipete/agent-scripts@brave-search
 npx skills add --global -y steipete/agent-scripts@nano-banana-pro
 npx skills add --global -y steipete/agent-scripts@openai-image-gen
 npx skills add --global -y steipete/agent-scripts@create-cli
-npx skills add --global -y steipete/agent-scripts@frontend-design
 npx skills add --global -y steipete/agent-scripts@instruments-profiling
 npx skills add --global -y steipete/agent-scripts@markdown-converter
 npx skills add --global -y steipete/agent-scripts@native-app-performance
 
-# From other registries
-npx skills add --global -y vercel-labs/agent-browser@agent-browser
-npx skills add --global -y chrisrodz/dotfiles@polishing-issues
-npx skills add --global -y resend/resend-skills@resend
+# Web & cloud stacks — React / Next.js / React Native (Vercel), Cloudflare
+npx skills add --global -y vercel-labs/agent-skills@vercel-react-best-practices
+npx skills add --global -y vercel-labs/agent-skills@vercel-react-native-skills
+npx skills add --global -y vercel-labs/agent-skills@vercel-optimize
+npx skills add --global -y cloudflare/skills@cloudflare
+npx skills add --global -y cloudflare/skills@workers-best-practices
+npx skills add --global -y cloudflare/skills@wrangler
 
-# Expo (React Native framework)
+# Mobile / native — Expo (iOS asc-* skills ship with the `asc` brew CLI)
 npx skills add --global -y expo/skills@building-native-ui
 npx skills add --global -y expo/skills@expo-api-routes
 npx skills add --global -y expo/skills@expo-cicd-workflows
@@ -201,11 +221,33 @@ npx skills add --global -y expo/skills@expo-tailwind-setup
 npx skills add --global -y expo/skills@native-data-fetching
 npx skills add --global -y expo/skills@upgrading-expo
 npx skills add --global -y expo/skills@use-dom
+
+# Design & frontend polish
+npx skills add --global -y openai/skills@frontend-skill
+npx skills add --global -y pbakaus/impeccable
+npx skills add --global -y Dammyjay93/interface-design
+npx skills add --global -y ibelick/ui-skills
+
+# Integrations & media
+npx skills add --global -y vercel-labs/agent-browser@agent-browser
+npx skills add --global -y agentmail-to/agentmail-skills@agentmail
+npx skills add --global -y resend/resend-skills@resend
+npx skills add --global -y remotion-dev/skills@remotion-best-practices
+
+# Research & async coding workflows
+npx skills add --global -y mattpocock/skills
+npx skills add --global -y mvanhorn/last30days-skill@last30days
 ```
 
+Local skills with no public registry live in `ai/skills/` (`polishing-issues`,
+`workspace-audit`) and are symlinked into `~/.agents/skills/` by bootstrap.
+
 To find and add more skills: `npx skills find <query>` then `npx skills add --global -y <owner/repo@skill>`
+
+Useful Matt Pocock skills include `/grill-me`, `/grill-with-docs`, `/diagnose`, `/triage`, `/to-prd`, `/to-issues`, `/prd-to-plan`, `/request-refactor-plan`, `/improve-codebase-architecture`, `/qa`, and `/handoff`.
 
 ### AI Coding Assistants
 
 - `claude-code` - Global Claude Code CLI installed via Homebrew for Anthropic workflows
 - `codex-cli` - Global OpenAI Codex CLI installed via Homebrew for Codex CLI tooling
+- `hermes` - Nous Research Hermes agent; reads global skills via `external_dirs` and shares `AGENTS.md` rules through `SOUL.md`

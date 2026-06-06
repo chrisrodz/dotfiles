@@ -29,6 +29,9 @@ brew "tree"         # Directory visualization
 brew "nvm"          # Node version manager
 brew "uv"           # Fast Python package installer & version manager
 
+# Mobile / iOS
+brew "asc"          # App Store Connect CLI (ships asc-* iOS skills: TestFlight, metadata, release)
+
 # Git & Security
 brew "gpg"          # GPG for commit signing
 brew "git"          # Git (latest version)
