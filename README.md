@@ -239,8 +239,8 @@ npx skills add --global -y mattpocock/skills
 npx skills add --global -y mvanhorn/last30days-skill@last30days
 ```
 
-Local skills with no public registry live in `ai/skills/` (`polishing-issues`,
-`workspace-audit`) and are symlinked into `~/.agents/skills/` by bootstrap.
+Local skills with no public registry live in `ai/skills/` (`polishing-issues`)
+and are symlinked into `~/.agents/skills/` by bootstrap.
 
 To find and add more skills: `npx skills find <query>` then `npx skills add --global -y <owner/repo@skill>`
 

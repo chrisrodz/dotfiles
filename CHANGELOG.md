@@ -9,7 +9,7 @@
 - Reconciled `bootstrap.sh` to be the true source of truth: grouped the skill list by domain, removed dead refs that never installed (Obsidian pack, callstack `agent-device`), and added in-use skills (remotion, last30days).
 - Added `asc` (App Store Connect CLI) to the Brewfile; it ships the `asc-*` iOS skills (TestFlight, metadata, release).
 - Removed the bundled `ai/skills/last30days/` (~200 files); now installed from the `mvanhorn/last30days-skill` registry instead.
-- Vendored the local, registry-less `workspace-audit` skill under `ai/skills/` so it survives a fresh-machine bootstrap; bootstrap now symlinks every `ai/skills/*` automatically.
+- Bootstrap now symlinks every local skill under `ai/skills/*` automatically (previously hardcoded to `polishing-issues`).
 - Added Matt Pocock's skills to bootstrap for async coding workflows like `/grill-me` and `/grill-with-docs`.
 - Migrated skills to global installation via `npx skills add --global`. Skills now installed from public registries instead of being bundled in repo.
 - Removed `ai/skills/` directory. Skills are now managed by the Skills CLI.
