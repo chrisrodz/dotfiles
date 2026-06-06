@@ -180,12 +180,14 @@ Bootstrap wires the symlinks, installs global skills, and exposes them to every 
 
 ### How skills reach each agent
 
-Skills install once to `~/.agents/skills/`, then bootstrap wires them per agent:
+`npx skills add --global` installs each skill to `~/.agents/skills/` and the
+Skills CLI wires it into **Claude, Codex, Hermes** (and ~30 other agents)
+automatically — no per-agent config in this repo. Local skills under `ai/skills/`
+install the same way (bootstrap passes their repo path).
 
-- **Claude Code** — symlinked into `~/.claude/skills/`
-- **Codex** — symlinked into `~/.codex/skills/`
-- **Hermes** — reads `~/.agents/skills` directly via `skills.external_dirs` in
-  `~/.hermes/config.yaml`
+Exception: the `asc-*` iOS skills ship with the `asc` CLI (not `npx`), which only
+registers them into `~/.agents/skills/` and Claude. Bootstrap mirrors just those
+into Codex and Hermes so they're available in all three.
 
 ### Global Skills (installed by bootstrap)
 
@@ -238,8 +240,9 @@ npx skills add --global -y mattpocock/skills
 npx skills add --global -y mvanhorn/last30days-skill@last30days
 ```
 
-Local skills with no public registry live in `ai/skills/` (`polishing-issues`)
-and are symlinked into `~/.agents/skills/` by bootstrap.
+Local skills with no public registry live in `ai/skills/` (`polishing-issues`);
+bootstrap installs them via the Skills CLI from their repo path, so they reach
+every agent just like registry skills.
 
 To find and add more skills: `npx skills find <query>` then `npx skills add --global -y <owner/repo@skill>`
 
@@ -249,4 +252,4 @@ Useful Matt Pocock skills include `/grill-me`, `/grill-with-docs`, `/diagnose`, 
 
 - `claude-code` - Global Claude Code CLI installed via Homebrew for Anthropic workflows
 - `codex-cli` - Global OpenAI Codex CLI installed via Homebrew for Codex CLI tooling
-- `hermes` - Nous Research Hermes agent; reads global skills via `external_dirs`
+- `hermes` - Nous Research Hermes agent; the Skills CLI wires global skills into it directly

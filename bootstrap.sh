@@ -301,10 +301,10 @@ done
 # ===== Install Global Skills =====
 echo "Installing global agent skills..."
 if command -v npx &> /dev/null; then
-  # Skills install to ~/.agents/skills/ (cross-agent standard), then fan out
-  # to each agent's skills dir (Claude, Codex). Hermes reads ~/.agents/skills
-  # directly via external_dirs (see Hermes section below).
-  mkdir -p "$HOME/.agents/skills" "$HOME/.claude/skills" "$HOME/.codex/skills"
+  # `npx skills add --global` installs to ~/.agents/skills/ and wires each skill
+  # into Claude, Codex, Hermes (and ~30 other agents) automatically — no manual
+  # fan-out or per-agent config needed. Local skills under ai/skills/ install the
+  # same way by passing their repo path (see the local-skills loop below).
 
   # --- Core utilities (steipete/agent-scripts) ---
   npx skills add --global -y steipete/agent-scripts@video-transcript-downloader 2>/dev/null || true
@@ -356,38 +356,32 @@ if command -v npx &> /dev/null; then
   npx skills add --global -y mattpocock/skills 2>/dev/null || true
   npx skills add --global -y mvanhorn/last30days-skill@last30days 2>/dev/null || true
 
-  # --- Local skills (no public registry) — symlinked from this repo ---
+  # --- Local skills (no public registry) — installed from this repo ---
+  # Same CLI path as registry skills, so the Skills CLI wires them into every
+  # agent too (Claude, Codex, Hermes, ...).
   for local_skill in "$DOTFILES_DIR"/ai/skills/*/; do
     [ -d "$local_skill" ] || continue
-    create_symlink "${local_skill%/}" "$HOME/.agents/skills/$(basename "${local_skill%/}")"
+    npx skills add --global -y "${local_skill%/}" 2>/dev/null || true
   done
-
-  # --- Fan out every global skill into Claude Code and Codex ---
-  for skill_dir in "$HOME/.agents/skills"/*/; do
-    skill_name=$(basename "$skill_dir")
-    for agent_skills in "$HOME/.claude/skills" "$HOME/.codex/skills"; do
-      [ -e "$agent_skills/$skill_name" ] || ln -sf "$skill_dir" "$agent_skills/$skill_name"
-    done
-  done
-  print_success "Global skills installed and linked into Claude + Codex"
+  print_success "Global skills installed (Skills CLI wired them into all agents)"
 else
   print_warning "npx not found, skipping skills installation"
 fi
 
-# ===== Hermes Agent (skills) =====
-# Hermes reads global skills from ~/.agents/skills via external_dirs.
-if command -v hermes &> /dev/null && [ -f "$HOME/.hermes/config.yaml" ]; then
-  echo "Wiring Hermes agent..."
-  if command -v yq &> /dev/null; then
-    cp "$HOME/.hermes/config.yaml" "$HOME/.hermes/config.yaml.bak.$(date +%Y%m%d-%H%M%S)"
-    yq -i '.skills.external_dirs = ((.skills.external_dirs // []) + ["~/.agents/skills"] | unique)' "$HOME/.hermes/config.yaml"
-    print_success "Hermes external_dirs includes ~/.agents/skills"
-  else
-    print_warning "yq not found; skipping Hermes external_dirs wiring"
-  fi
-else
-  print_warning "Hermes not installed or not initialized; skipping Hermes wiring"
-fi
+# ===== iOS skills (asc CLI) — mirror into Codex + Hermes =====
+# npx-installed skills reach every agent via the Skills CLI. The asc-* iOS skills
+# are different: the `asc` CLI registers them into ~/.agents/skills and Claude
+# only, so mirror just those into Codex and Hermes (additive — never clobbers).
+asc_synced=0
+for asc_skill in "$HOME"/.agents/skills/asc-*/; do
+  [ -d "$asc_skill" ] || continue
+  name=$(basename "$asc_skill")
+  for agent_skills in "$HOME/.codex/skills" "$HOME/.hermes/skills"; do
+    [ -d "$agent_skills" ] || continue
+    [ -e "$agent_skills/$name" ] || { ln -sf "$asc_skill" "$agent_skills/$name"; asc_synced=1; }
+  done
+done
+[ "$asc_synced" = "1" ] && print_success "Mirrored asc-* iOS skills into Codex + Hermes"
 
 # ===== Environment Setup =====
 if [ ! -f "$HOME/.env.local" ]; then
