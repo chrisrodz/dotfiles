@@ -98,6 +98,7 @@ Don't: change multiple things at once; assume cause without evidence; fix sympto
 - Avoid boolean params — they obscure intent at call sites.
 - Comments explain WHY, not WHAT. Delete comments that restate code.
 - TODO format: `// TODO: [context] description`
+- Ticket refs (`JIRA-123`, `INFR-456`, etc.): TODOs + commit messages only. Explanatory comments, docstrings, PR descriptions: self-contained — a future reader without tracker access must still understand the reasoning.
 
 ## Error Handling
 - Define domain-specific error types per module.
