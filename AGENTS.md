@@ -15,6 +15,7 @@ Style: concise, telegraphic, noun-phrases ok, minimal tokens. No emojis.
 
 - Timezone: America/Puerto_Rico (UTC-4).
 - Use `gh` for GitHub; avoid the web UI. Use `gh pr view/diff` for viewing PRs
+- Never use `#<number>` in PR/issue comments or descriptions — GitHub auto-links it and surfaces unrelated PRs/issues. Use a plain number or word ("PR 204", "finding 1") or the full URL.
 - Use concise conventional commits: `feat:`, `fix:`, `docs:`, `style:`, `refactor:`, `perf:`, `test:`, `build:`, `ci:`, `chore:`. Add `!` for breaking changes or scope like `feat(api):`.
 - ASCII only in docs unless a file already uses Unicode.
 - ASCII art allowed only for planning visuals.
@@ -25,6 +26,7 @@ Style: concise, telegraphic, noun-phrases ok, minimal tokens. No emojis.
 - Unrecognized changes: assume other agent; keep going; focus your changes. If it causes issues, stop + ask user.
 - Leave breadcrumb notes in thread.
 - Never create, modify, or delete Coolify resources without explicit user approval first. Read-only inspection is fine; writes require a direct yes in the current thread.
+- Never connect/disconnect/modify Cloudflare WARP (`warp-cli connect`, `disconnect`, `registration delete`, settings changes, profile switches) without explicit user approval first. Read-only status checks (`warp-cli status`, `settings`, `registration show`) are fine; any state change requires a direct yes in the current thread.
 
 ## Debugging
 1. Reproduce reliably.
