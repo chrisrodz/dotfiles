@@ -16,7 +16,3 @@ ai/tmp/
 
 # Codex system skills cache
 ai/skills/.system/
-
-# Local Claude skills
-ai/skills/eod/
-ai/skills/sod/
