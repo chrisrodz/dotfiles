@@ -20,8 +20,11 @@ The outgoing day's `Tomorrow's MIT` seeds the incoming day's MIT.
 ## Read first (every run)
 
 1. [references/config.md](references/config.md) — environment-specific values
-   (`{{TOKENS}}`). Substitute these everywhere. If a token is an unfilled
-   `<PLACEHOLDER>`, skip the source that needs it rather than guessing.
+   (`{{TOKENS}}`). Substitute these everywhere. **If `references/config.local.md`
+   exists, read it too and let its values override `config.md`** (it holds real
+   per-machine values and is gitignored so the repo stays agnostic). If a token is
+   still an unfilled `<PLACEHOLDER>` after the override, skip the source that needs it
+   rather than guessing.
 2. [references/layout.md](references/layout.md) — the "Variant A" callout layout + write
    model. Render exactly this.
 

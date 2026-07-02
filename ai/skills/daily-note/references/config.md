@@ -12,7 +12,13 @@ Two kinds of values live here:
   the values that were previously hardcoded; keeping them here is what makes the
   skill portable.
 
-If a token below still holds a `<PLACEHOLDER>`, the skill must degrade gracefully:
+**Local override.** Real per-machine values live in `config.local.md` (gitignored) so
+this committed file stays generic. If `config.local.md` exists, its token values
+override the ones here. Copy the environment rows below into `config.local.md` and fill
+them in.
+
+If a token below still holds a `<PLACEHOLDER>` (and no override supplies it), the skill
+must degrade gracefully:
 skip the data source that needs it rather than guessing (e.g. no squad channels ->
 skip squad catch-up; no work email domain -> fall back to "has a video link OR 2+
 external attendees" for the work-meeting filter).
