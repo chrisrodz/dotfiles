@@ -2,7 +2,6 @@
 
 # ===== Editor =====
 export EDITOR="cursor"
-export REACT_TERMINAL="iTerm.app"
 
 # ===== NVM from Homebrew =====
 [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"

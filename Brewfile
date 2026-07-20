@@ -32,12 +32,18 @@ brew "uv"           # Fast Python package installer & version manager
 # Mobile / iOS
 brew "asc"          # App Store Connect CLI (ships asc-* iOS skills: TestFlight, metadata, release)
 
+# Networking
+cask "tailscale-app" # Mesh VPN client (requires sign-in and system extension approval)
+
+# Development Apps
+cask "cursor"        # AI code editor
+
 # Git & Security
 brew "gpg"          # GPG for commit signing
 brew "git"          # Git (latest version)
 
 # Optional: Productivity
-brew "tmux"       # Terminal multiplexer
+brew "herdr"      # Agent-aware terminal multiplexer
 brew "trash"      # Safe delete CLI
 
 # Optional: Media tools (used by video-transcript-downloader)

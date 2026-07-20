@@ -130,12 +130,26 @@ gh repo sync
 - `htop` - Process viewer
 - `tree` - Directory visualization
 - `trash` - Safe delete CLI
+- `herdr` - Persistent, agent-aware terminal multiplexer
+
+Herdr runs as a per-user login service after bootstrap. Launch or reattach with
+`herdr`; agent processes and panes remain available across terminal sessions.
 
 **Version Managers**
 
 - `nvm` - Node.js version management
+- Current Node.js LTS - Installed and selected automatically through NVM
 - `uv` - Fast Python package installer & version manager
 - `bun` - JS runtime for tools/scripts
+
+**Development Apps**
+
+- `cursor` - AI code editor
+- `tailscale-app` - Mesh VPN client
+
+**Coding Agents**
+
+- `pi` - Pi coding agent, installed globally from `@earendil-works/pi-coding-agent`
 
 **Git & Security**
 
@@ -253,3 +267,16 @@ Useful Matt Pocock skills include `/grill-me`, `/grill-with-docs`, `/diagnose`, 
 - `claude-code` - Global Claude Code CLI installed via Homebrew for Anthropic workflows
 - `codex-cli` - Global OpenAI Codex CLI installed via Homebrew for Codex CLI tooling
 - `hermes` - Nous Research Hermes agent; the Skills CLI wires global skills into it directly
+
+### Expo iOS Simulator
+
+Install the latest stable Xcode from the Mac App Store, open it once to accept
+its license and finish component installation, then install only the current iOS
+Simulator runtime:
+
+```bash
+sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
+xcodebuild -downloadPlatform iOS
+```
+
+Older simulator runtimes are optional and are not part of this setup.
