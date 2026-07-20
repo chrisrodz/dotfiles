@@ -147,6 +147,11 @@ Herdr runs as a per-user login service after bootstrap. Launch or reattach with
 - `cursor` - AI code editor
 - `tailscale-app` - Mesh VPN client
 
+**Mobile Development**
+
+- `cocoapods` - Native iOS dependencies for `npx expo run:ios`
+- Xcode plus one current iOS Simulator runtime - Installed separately through Apple
+
 **Coding Agents**
 
 - `pi` - Pi coding agent, installed globally from `@earendil-works/pi-coding-agent`
@@ -276,6 +281,7 @@ Simulator runtime:
 
 ```bash
 sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
+xcodebuild -runFirstLaunch
 xcodebuild -downloadPlatform iOS
 ```
 

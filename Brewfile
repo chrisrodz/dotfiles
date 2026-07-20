@@ -31,6 +31,7 @@ brew "uv"           # Fast Python package installer & version manager
 
 # Mobile / iOS
 brew "asc"          # App Store Connect CLI (ships asc-* iOS skills: TestFlight, metadata, release)
+brew "cocoapods"    # Native iOS dependencies for local Expo/React Native builds
 
 # Networking
 cask "tailscale-app" # Mesh VPN client (requires sign-in and system extension approval)
