@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Added the `i-have-adhd` skill for action-first, low-friction agent output.
+- Removed stale `frontend-design`, `prd-to-issues`, and legacy global `workspace-audit` skills across Skills CLI agents; retained Hermes' maintained note-taking audit.
 - Made `bootstrap.sh` additive and non-destructive: it never replaces an existing file without consent. Conflicts prompt `[y/N/a]` interactively, skip when run non-interactively, or overwrite with `--yolo`/`-y` (backups still kept). New files/symlinks are added silently.
 - Added `agent-device` (Callstack React Native device interaction) to the default mobile skills.
 - Added default skills for the mobile/web stack: React + Next.js and React Native (Vercel Engineering), Vercel optimization, and Cloudflare (Workers, Wrangler, platform). Covers the new mobile app's stack out of the box.

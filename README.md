@@ -130,12 +130,31 @@ gh repo sync
 - `htop` - Process viewer
 - `tree` - Directory visualization
 - `trash` - Safe delete CLI
+- `herdr` - Persistent, agent-aware terminal multiplexer
+
+Herdr runs as a per-user login service after bootstrap. Launch or reattach with
+`herdr`; agent processes and panes remain available across terminal sessions.
 
 **Version Managers**
 
 - `nvm` - Node.js version management
+- Current Node.js LTS - Installed and selected automatically through NVM
 - `uv` - Fast Python package installer & version manager
 - `bun` - JS runtime for tools/scripts
+
+**Development Apps**
+
+- `cursor` - AI code editor
+- `tailscale-app` - Mesh VPN client
+
+**Mobile Development**
+
+- `cocoapods` - Native iOS dependencies for `npx expo run:ios`
+- Xcode plus one current iOS Simulator runtime - Installed separately through Apple
+
+**Coding Agents**
+
+- `pi` - Pi coding agent, installed globally from `@earendil-works/pi-coding-agent`
 
 **Git & Security**
 
@@ -178,6 +197,10 @@ gh repo sync
 
 Bootstrap wires the symlinks, installs global skills, and exposes them to every agent.
 
+Retired skills (`frontend-design`, `prd-to-issues`, and the legacy global
+`workspace-audit`) are removed from the shared store and all Skills CLI agents
+during bootstrap. Hermes' separate, maintained note-taking audit remains intact.
+
 ### How skills reach each agent
 
 `npx skills add --global` installs each skill to `~/.agents/skills/` and the
@@ -194,6 +217,9 @@ into Codex and Hermes so they're available in all three.
 Grouped by domain — the canonical list lives in `bootstrap.sh`:
 
 ```bash
+# Output ergonomics
+npx skills add --global --agent '*' -y ayghri/i-have-adhd@i-have-adhd
+
 # Core utilities (steipete/agent-scripts)
 npx skills add --global -y steipete/agent-scripts@video-transcript-downloader
 npx skills add --global -y steipete/agent-scripts@brave-search
@@ -253,3 +279,17 @@ Useful Matt Pocock skills include `/grill-me`, `/grill-with-docs`, `/diagnose`, 
 - `claude-code` - Global Claude Code CLI installed via Homebrew for Anthropic workflows
 - `codex-cli` - Global OpenAI Codex CLI installed via Homebrew for Codex CLI tooling
 - `hermes` - Nous Research Hermes agent; the Skills CLI wires global skills into it directly
+
+### Expo iOS Simulator
+
+Install the latest stable Xcode from the Mac App Store, open it once to accept
+its license and finish component installation, then install only the current iOS
+Simulator runtime:
+
+```bash
+sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
+xcodebuild -runFirstLaunch
+xcodebuild -downloadPlatform iOS
+```
+
+Older simulator runtimes are optional and are not part of this setup.

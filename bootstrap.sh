@@ -117,6 +117,22 @@ if [ "$OS" = "Darwin" ]; then
   brew bundle
   print_success "Brew packages installed"
 
+  # Homebrew installs NVM without creating its working directory or a Node runtime.
+  export NVM_DIR="$HOME/.nvm"
+  mkdir -p "$NVM_DIR"
+  # shellcheck disable=SC1091
+  . "$(brew --prefix nvm)/nvm.sh"
+  if ! nvm version default &> /dev/null; then
+    echo "Installing current Node.js LTS..."
+    nvm install --lts
+    nvm alias default 'lts/*'
+  fi
+  nvm use default --silent
+  print_success "Node.js $(node --version) available via NVM"
+
+  brew services start herdr
+  print_success "Herdr service started"
+
 elif [ "$OS" = "Linux" ]; then
   # Linux: Install packages via apt
   echo "Installing apt packages..."
@@ -209,6 +225,15 @@ else
   print_success "GitHub already authenticated"
 fi
 
+# ===== Pi Coding Agent =====
+if ! command -v pi &> /dev/null; then
+  echo "Installing Pi coding agent..."
+  npm install --global @earendil-works/pi-coding-agent
+  print_success "Pi coding agent installed"
+else
+  print_success "Pi coding agent already installed"
+fi
+
 # ===== Install Oh My Zsh =====
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
   echo "Installing Oh My Zsh..."
@@ -267,9 +292,6 @@ fi
 create_symlink "$DOTFILES_DIR/git/.gitconfig" "$HOME/.gitconfig"
 create_symlink "$DOTFILES_DIR/git/.gitignore_global" "$HOME/.gitignore_global"
 
-# Tmux
-create_symlink "$DOTFILES_DIR/tmux/.tmux.conf" "$HOME/.tmux.conf"
-
 # Claude
 mkdir -p "$HOME/.claude"
 create_symlink "$DOTFILES_DIR/claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
@@ -305,6 +327,12 @@ if command -v npx &> /dev/null; then
   # into Claude, Codex, Hermes (and ~30 other agents) automatically — no manual
   # fan-out or per-agent config needed. Local skills under ai/skills/ install the
   # same way by passing their repo path (see the local-skills loop below).
+
+  # Retired skills: remove canonical copies and every Skills CLI registration.
+  npx skills remove --global -y frontend-design prd-to-issues workspace-audit 2>/dev/null || true
+
+  # --- Output ergonomics ---
+  npx skills add --global --agent '*' -y ayghri/i-have-adhd@i-have-adhd 2>/dev/null || true
 
   # --- Core utilities (steipete/agent-scripts) ---
   npx skills add --global -y steipete/agent-scripts@video-transcript-downloader 2>/dev/null || true
@@ -423,6 +451,7 @@ echo "2. Restart your terminal or run: source ~/.zshrc"
 if [ "$OS" = "Darwin" ]; then
   echo "3. Optional: Set editor override in ~/.gitconfig.local (editor = cursor --wait)"
   echo "4. Optional: Configure GPG signing (see git/.gitconfig)"
+  echo "5. Launch Tailscale, sign in, and approve its system extension when prompted"
 else
   echo "3. Optional: Configure GPG signing (see git/.gitconfig)"
 fi
