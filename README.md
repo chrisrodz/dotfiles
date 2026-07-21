@@ -218,7 +218,7 @@ Grouped by domain — the canonical list lives in `bootstrap.sh`:
 
 ```bash
 # Output ergonomics
-npx skills add --global -y ayghri/i-have-adhd@i-have-adhd
+npx skills add --global --agent '*' -y ayghri/i-have-adhd@i-have-adhd
 
 # Core utilities (steipete/agent-scripts)
 npx skills add --global -y steipete/agent-scripts@video-transcript-downloader

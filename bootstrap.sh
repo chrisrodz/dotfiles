@@ -332,7 +332,7 @@ if command -v npx &> /dev/null; then
   npx skills remove --global -y frontend-design prd-to-issues workspace-audit 2>/dev/null || true
 
   # --- Output ergonomics ---
-  npx skills add --global -y ayghri/i-have-adhd@i-have-adhd 2>/dev/null || true
+  npx skills add --global --agent '*' -y ayghri/i-have-adhd@i-have-adhd 2>/dev/null || true
 
   # --- Core utilities (steipete/agent-scripts) ---
   npx skills add --global -y steipete/agent-scripts@video-transcript-downloader 2>/dev/null || true
