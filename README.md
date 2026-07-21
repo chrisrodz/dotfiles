@@ -197,6 +197,10 @@ Herdr runs as a per-user login service after bootstrap. Launch or reattach with
 
 Bootstrap wires the symlinks, installs global skills, and exposes them to every agent.
 
+Retired skills (`frontend-design`, `prd-to-issues`, and the legacy global
+`workspace-audit`) are removed from the shared store and all Skills CLI agents
+during bootstrap. Hermes' separate, maintained note-taking audit remains intact.
+
 ### How skills reach each agent
 
 `npx skills add --global` installs each skill to `~/.agents/skills/` and the
@@ -213,6 +217,9 @@ into Codex and Hermes so they're available in all three.
 Grouped by domain — the canonical list lives in `bootstrap.sh`:
 
 ```bash
+# Output ergonomics
+npx skills add --global -y ayghri/i-have-adhd@i-have-adhd
+
 # Core utilities (steipete/agent-scripts)
 npx skills add --global -y steipete/agent-scripts@video-transcript-downloader
 npx skills add --global -y steipete/agent-scripts@brave-search

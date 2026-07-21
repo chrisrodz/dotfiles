@@ -328,6 +328,12 @@ if command -v npx &> /dev/null; then
   # fan-out or per-agent config needed. Local skills under ai/skills/ install the
   # same way by passing their repo path (see the local-skills loop below).
 
+  # Retired skills: remove canonical copies and every Skills CLI registration.
+  npx skills remove --global -y frontend-design prd-to-issues workspace-audit 2>/dev/null || true
+
+  # --- Output ergonomics ---
+  npx skills add --global -y ayghri/i-have-adhd@i-have-adhd 2>/dev/null || true
+
   # --- Core utilities (steipete/agent-scripts) ---
   npx skills add --global -y steipete/agent-scripts@video-transcript-downloader 2>/dev/null || true
   npx skills add --global -y steipete/agent-scripts@brave-search 2>/dev/null || true
