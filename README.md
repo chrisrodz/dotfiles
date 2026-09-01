@@ -197,9 +197,9 @@ Herdr runs as a per-user login service after bootstrap. Launch or reattach with
 
 Bootstrap wires the symlinks, installs global skills, and exposes them to every agent.
 
-Retired skills (`frontend-design`, `prd-to-issues`, and the legacy global
-`workspace-audit`) are removed from the shared store and all Skills CLI agents
-during bootstrap. Hermes' separate, maintained note-taking audit remains intact.
+Bootstrap removes former global skills that now belong in the per-repo catalog.
+Their source links and install commands remain in
+[`ai/skills-catalog.md`](ai/skills-catalog.md).
 
 ### How skills reach each agent
 
@@ -212,67 +212,23 @@ Exception: the `asc-*` iOS skills ship with the `asc` CLI (not `npx`), which onl
 registers them into `~/.agents/skills/` and Claude. Bootstrap mirrors just those
 into Codex and Hermes so they're available in all three.
 
-### Global Skills (installed by bootstrap)
+### Global skills installed by bootstrap
 
-Grouped by domain — the canonical list lives in `bootstrap.sh`:
+The global baseline contains skills with repeated cross-repo use:
 
-```bash
-# Output ergonomics
-npx skills add --global --agent '*' -y ayghri/i-have-adhd@i-have-adhd
+- Personal behavior: `show-me`, `unslop`, `i-have-adhd`.
+- Session workflows: `autoqa`, `cascade`, `recall`, `recap`, `tether`.
+- Engineering: `code-review`, `codebase-design`, `diagnosing-bugs`, `research`, `resolving-merge-conflicts`.
+- Platforms and tools: `northflank`, `cloudflare`, `workers-best-practices`, `wrangler`, `agent-browser`.
+- Owned workflows: `daily-note`, `polishing-issues`.
 
-# Core utilities (steipete/agent-scripts)
-npx skills add --global -y steipete/agent-scripts@video-transcript-downloader
-npx skills add --global -y steipete/agent-scripts@brave-search
-npx skills add --global -y steipete/agent-scripts@nano-banana-pro
-npx skills add --global -y steipete/agent-scripts@openai-image-gen
-npx skills add --global -y steipete/agent-scripts@create-cli
-npx skills add --global -y steipete/agent-scripts@instruments-profiling
-npx skills add --global -y steipete/agent-scripts@markdown-converter
-npx skills add --global -y steipete/agent-scripts@native-app-performance
+External sources live in [`ai/skills/global-sources.txt`](ai/skills/global-sources.txt).
+Owned or intentionally adapted skills live under `ai/skills/`. Bootstrap installs
+both sets through the Skills CLI and exits with an error if any install fails.
 
-# Web & cloud stacks — React / Next.js / React Native (Vercel), Cloudflare
-npx skills add --global -y vercel-labs/agent-skills@vercel-react-best-practices
-npx skills add --global -y vercel-labs/agent-skills@vercel-react-native-skills
-npx skills add --global -y vercel-labs/agent-skills@vercel-optimize
-npx skills add --global -y cloudflare/skills@cloudflare
-npx skills add --global -y cloudflare/skills@workers-best-practices
-npx skills add --global -y cloudflare/skills@wrangler
-
-# Mobile / native — Expo (iOS asc-* skills ship with the `asc` brew CLI)
-npx skills add --global -y expo/skills@building-native-ui
-npx skills add --global -y expo/skills@expo-api-routes
-npx skills add --global -y expo/skills@expo-cicd-workflows
-npx skills add --global -y expo/skills@expo-deployment
-npx skills add --global -y expo/skills@expo-dev-client
-npx skills add --global -y expo/skills@expo-tailwind-setup
-npx skills add --global -y expo/skills@native-data-fetching
-npx skills add --global -y expo/skills@upgrading-expo
-npx skills add --global -y expo/skills@use-dom
-
-# Design & frontend polish
-npx skills add --global -y openai/skills@frontend-skill
-npx skills add --global -y pbakaus/impeccable
-npx skills add --global -y Dammyjay93/interface-design
-npx skills add --global -y ibelick/ui-skills
-
-# Integrations & media
-npx skills add --global -y vercel-labs/agent-browser@agent-browser
-npx skills add --global -y agentmail-to/agentmail-skills@agentmail
-npx skills add --global -y resend/resend-skills@resend
-npx skills add --global -y remotion-dev/skills@remotion-best-practices
-
-# Research & async coding workflows
-npx skills add --global -y mattpocock/skills
-npx skills add --global -y mvanhorn/last30days-skill@last30days
-```
-
-Local skills with no public registry live in `ai/skills/` (`polishing-issues`);
-bootstrap installs them via the Skills CLI from their repo path, so they reach
-every agent just like registry skills.
-
-To find and add more skills: `npx skills find <query>` then `npx skills add --global -y <owner/repo@skill>`
-
-Useful Matt Pocock skills include `/grill-me`, `/grill-with-docs`, `/diagnose`, `/triage`, `/to-prd`, `/to-issues`, `/prd-to-plan`, `/request-refactor-plan`, `/improve-codebase-architecture`, `/qa`, and `/handoff`.
+The full [skill catalog](ai/skills-catalog.md) records authors, sources, retired
+global skills, and copy-paste per-repo installation commands for specialized work
+such as Expo, React Native, frontend design, video, email, and Remotion.
 
 ### AI Coding Assistants
 
