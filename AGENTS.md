@@ -21,10 +21,20 @@ Style: concise, telegraphic, noun-phrases ok, minimal tokens. No emojis.
 - ASCII art allowed only for planning visuals.
 - Need upstream file: stage in /tmp/, then cherry-pick; never overwrite tracked.
 - Fix root cause (not band-aid).
-- Unsure: read more code; if still stuck, ask w/ short options.
+- Ask only when a missing choice changes scope, risk, or the result. Otherwise state the assumption and proceed.
 - Conflicts: call out; pick safer path.
-- Unrecognized changes: assume other agent; keep going; focus your changes. If it causes issues, stop + ask user.
+- Preserve unrelated changes. If they overlap with the task or break validation, stop and ask.
 - Leave breadcrumb notes in thread.
+
+## Authorization
+
+- A destination named by the user is trusted for the payload they asked to send there.
+- "Make/open the PR" authorizes creating and pushing a non-default branch to the named repo, then opening the PR.
+- "Land the PR" or invoking a landing workflow authorizes applying the exact reviewed plan when it has no destroys or unrelated changes, posting sanitized evidence, running post-flight checks, approving, merging, and deleting an unstacked remote branch.
+- Ask before resource deletion, secret transfer, permission or protection bypass, force push, default-branch push, or unrelated mutation.
+
+## Safety Boundaries
+
 - Never create, modify, or delete Coolify resources without explicit user approval first. Read-only inspection is fine; writes require a direct yes in the current thread.
 - Never connect/disconnect/modify Cloudflare WARP (`warp-cli connect`, `disconnect`, `registration delete`, settings changes, profile switches) without explicit user approval first. Read-only status checks (`warp-cli status`, `settings`, `registration show`) are fine; any state change requires a direct yes in the current thread.
 
@@ -61,7 +71,6 @@ Don't: change multiple things at once; assume cause without evidence; fix sympto
 7) Testable.
 
 ## Before Writing Code
-- Restate the goal; ask if ambiguous.
 - Identify failure modes: invalid inputs, missing deps, network/IO, concurrency, resource exhaustion.
 - Classify scope: A) core flow, B) edge cases, C) out of scope (document, don't implement).
 - Check existing code — extend before creating.
@@ -71,26 +80,28 @@ Don't: change multiple things at once; assume cause without evidence; fix sympto
 - For non-trivial work, provide a short plan before editing.
 - Keep scope tight; split large files when they grow past ~500 LOC.
 - Group by feature/domain, not by layer.
+- For every brainstorming or investigation task, use the globally installed
+  `show-me` skill. Pick the smallest visual that makes the key idea, evidence,
+  or tradeoff clear; keep supporting prose concise.
 
 ## Git
 
 - Safe by default: `git status`, `git diff`, `git log`.
 - Fetch before work; pull only when behind (ff-only).
-- Branch changes require user consent.
-- For non-main branches: push after meaningful checkpoints.
-- For main: push only when asked.
+- Create or push a non-default branch when the user requests code changes, a PR, or a landing workflow.
+- Push after meaningful checkpoints. Never force-push or push the default branch unless asked.
 - No amend unless asked.
 - No destructive ops without explicit request (`reset --hard`, `clean`, `restore`, `rm`, etc.).
 - Use `trash` for deletions when possible.
 - Prefer `committer` helper when available; stage explicit paths only.
-- If unexpected changes appear, stop and ask.
 
 ## Build / Test
 
 - Prefer end-to-end verification; if blocked, say what is missing.
 - Add regression tests when the change warrants it.
-- Before handoff: run full gate (lint/typecheck/tests/docs).
-- CI red: gh run list/view, rerun, fix, push, repeat til green.
+- Before handoff, run the relevant repo gate. Report skipped checks and why.
+- Inspect failed CI before rerunning it. Fix the cause, push, and monitor the result.
+- For PRs, address one round of available AI review feedback before handoff or merge. Rerun affected checks.
 - Pre-submit: no commented-out code; no naked TODOs (use `// TODO: [reason] desc`); actionable error msgs; no hardcoded secrets.
 - Test behavior, not implementation. Public interface, not private details.
 - Unit tests by default. Integration tests for: critical paths, complex interactions, external service contracts.
@@ -109,9 +120,8 @@ Don't: change multiple things at once; assume cause without evidence; fix sympto
 - Fail at the source; don't pass invalid state downstream.
 
 ## Refactoring
-- Refactor before adding a feature (make the change easy, then make the easy change).
-- Never change behavior and structure in the same step.
-- Don't refactor while debugging or without test coverage.
+- Refactor first only when it makes the requested change safer or smaller.
+- Keep behavior and structural changes separate when practical.
 - "While I'm here" changes: separate commit or ticket.
 
 ## Dependencies
@@ -127,8 +137,7 @@ Before adding: can we solve this in <100 lines? Is it maintained? Transitive cos
   - Cursor global: `~/.cursor/commands/`
 
 ## Token Efficiency
-- Never re-read files you just wrote or edited.
-- Never re-run commands to verify unless outcome was uncertain.
+- Avoid redundant reads and reruns. Repeat when output was incomplete, state may have changed, or verification requires it.
 - Don't echo large blocks of code unless asked.
 - Batch related edits — don't make 5 edits when 1 handles it.
 - Don't summarize what you just did unless result is ambiguous.
