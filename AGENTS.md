@@ -10,6 +10,7 @@ Style: concise, telegraphic, noun-phrases ok, minimal tokens. No emojis.
 - Fail fast, fail loud — surface errors at the source
 - Delete code — less code = fewer bugs; question every addition
 - Verify, don't assume — run it, test it, prove it
+- Make the best decision that will elevate all three: the user experience (UX), developer experience (DX), and agent experience (AX) always, without breaking anything.
 
 ## Agent Protocol
 
