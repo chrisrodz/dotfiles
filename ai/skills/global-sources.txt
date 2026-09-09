@@ -1,0 +1,17 @@
+# source|skill
+Parcha-ai/parcha-skills|autoqa
+Parcha-ai/parcha-skills|cascade
+Parcha-ai/parcha-skills|recall
+Parcha-ai/parcha-skills|recap
+Parcha-ai/parcha-skills|tether
+mattpocock/skills|code-review
+mattpocock/skills|codebase-design
+mattpocock/skills|diagnosing-bugs
+mattpocock/skills|research
+mattpocock/skills|resolving-merge-conflicts
+northflank/skills|northflank
+cloudflare/skills|cloudflare
+cloudflare/skills|workers-best-practices
+cloudflare/skills|wrangler
+vercel-labs/agent-browser|agent-browser
+ayghri/i-have-adhd|i-have-adhd

@@ -323,77 +323,61 @@ done
 # ===== Install Global Skills =====
 echo "Installing global agent skills..."
 if command -v npx &> /dev/null; then
-  # `npx skills add --global` installs to ~/.agents/skills/ and wires each skill
-  # into Claude, Codex, Hermes (and ~30 other agents) automatically — no manual
-  # fan-out or per-agent config needed. Local skills under ai/skills/ install the
-  # same way by passing their repo path (see the local-skills loop below).
+  skill_failures=()
 
-  # Retired skills: remove canonical copies and every Skills CLI registration.
-  npx skills remove --global -y frontend-design prd-to-issues workspace-audit 2>/dev/null || true
+  # Remove skills that are now catalog-only. Their sources and per-repo install
+  # commands remain in ai/skills-catalog.md.
+  retired_skills=(
+    agent-device agentmail baseline-ui brave-search building-native-ui
+    create-cli create-design-md design-an-interface desloppify domain-modeling
+    edit-article expo-api-routes expo-cicd-workflows expo-deployment expo-dev-client
+    expo-tailwind-setup fixing-accessibility fixing-metadata fixing-motion-performance
+    frontend-design frontend-skill git-guardrails-claude-code grilling hands-free
+    impeccable improve-ui instruments-profiling interface-design last30days
+    markdown-converter migrate-to-shoehorn nano-banana-pro native-app-performance
+    native-data-fetching obsidian-vault openai-image-gen parable prd-to-issues
+    prototype qa remotion-best-practices request-refactor-plan resend
+    scaffold-exercises setup-pre-commit tdd ui-skills-root upgrading-expo use-dom
+    vercel-optimize vercel-react-best-practices vercel-react-native-skills
+    video-transcript-downloader workspace-audit
+  )
+  if ! npx skills remove --global -y "${retired_skills[@]}"; then
+    skill_failures+=("remove catalog-only skills")
+  fi
 
-  # --- Output ergonomics ---
-  npx skills add --global --agent '*' -y ayghri/i-have-adhd@i-have-adhd 2>/dev/null || true
+  # Install only the externally maintained skills proven useful across repos.
+  # The manifest is the machine-readable source of truth. The catalog records
+  # attribution and the larger per-repo library.
+  while IFS='|' read -r skill_source skill_name; do
+    case "$skill_source" in
+      ''|'#'*) continue ;;
+    esac
+    if [ -z "$skill_name" ]; then
+      skill_failures+=("invalid manifest entry: $skill_source")
+      continue
+    fi
+    if ! npx skills add "$skill_source" --global --agent '*' --skill "$skill_name" --yes --full-depth </dev/null; then
+      skill_failures+=("install $skill_source:$skill_name")
+    fi
+  done < "$DOTFILES_DIR/ai/skills/global-sources.txt"
 
-  # --- Core utilities (steipete/agent-scripts) ---
-  npx skills add --global -y steipete/agent-scripts@video-transcript-downloader 2>/dev/null || true
-  npx skills add --global -y steipete/agent-scripts@brave-search 2>/dev/null || true
-  npx skills add --global -y steipete/agent-scripts@nano-banana-pro 2>/dev/null || true
-  npx skills add --global -y steipete/agent-scripts@openai-image-gen 2>/dev/null || true
-  npx skills add --global -y steipete/agent-scripts@create-cli 2>/dev/null || true
-  npx skills add --global -y steipete/agent-scripts@instruments-profiling 2>/dev/null || true
-  npx skills add --global -y steipete/agent-scripts@markdown-converter 2>/dev/null || true
-  npx skills add --global -y steipete/agent-scripts@native-app-performance 2>/dev/null || true
-
-  # --- Web & cloud stacks ---
-  # React / Next.js / React Native (Vercel Engineering, official)
-  npx skills add --global -y vercel-labs/agent-skills@vercel-react-best-practices 2>/dev/null || true
-  npx skills add --global -y vercel-labs/agent-skills@vercel-react-native-skills 2>/dev/null || true
-  npx skills add --global -y vercel-labs/agent-skills@vercel-optimize 2>/dev/null || true
-  # Cloudflare (Workers, Pages, KV/D1/R2, Agents SDK — official)
-  npx skills add --global -y cloudflare/skills@cloudflare 2>/dev/null || true
-  npx skills add --global -y cloudflare/skills@workers-best-practices 2>/dev/null || true
-  npx skills add --global -y cloudflare/skills@wrangler 2>/dev/null || true
-
-  # --- Mobile / native (Expo — official) ---
-  # iOS App Store Connect skills (asc-*) ship with the `asc` CLI (see Brewfile), not here.
-  npx skills add --global -y expo/skills@building-native-ui 2>/dev/null || true
-  npx skills add --global -y expo/skills@expo-api-routes 2>/dev/null || true
-  npx skills add --global -y expo/skills@expo-cicd-workflows 2>/dev/null || true
-  npx skills add --global -y expo/skills@expo-deployment 2>/dev/null || true
-  npx skills add --global -y expo/skills@expo-dev-client 2>/dev/null || true
-  npx skills add --global -y expo/skills@expo-tailwind-setup 2>/dev/null || true
-  npx skills add --global -y expo/skills@native-data-fetching 2>/dev/null || true
-  npx skills add --global -y expo/skills@upgrading-expo 2>/dev/null || true
-  npx skills add --global -y expo/skills@use-dom 2>/dev/null || true
-  # React Native device interaction (Callstack)
-  npx skills add --global -y callstackincubator/agent-device@agent-device 2>/dev/null || true
-
-  # --- Design & frontend polish ---
-  npx skills add --global -y openai/skills@frontend-skill 2>/dev/null || true
-  npx skills add --global -y pbakaus/impeccable 2>/dev/null || true
-  npx skills add --global -y Dammyjay93/interface-design 2>/dev/null || true
-  npx skills add --global -y ibelick/ui-skills 2>/dev/null || true
-
-  # --- Integrations & media ---
-  npx skills add --global -y vercel-labs/agent-browser@agent-browser 2>/dev/null || true
-  npx skills add --global -y agentmail-to/agentmail-skills@agentmail 2>/dev/null || true
-  npx skills add --global -y resend/resend-skills@resend 2>/dev/null || true
-  npx skills add --global -y remotion-dev/skills@remotion-best-practices 2>/dev/null || true
-
-  # --- Research & async coding workflows ---
-  npx skills add --global -y mattpocock/skills 2>/dev/null || true
-  npx skills add --global -y mvanhorn/last30days-skill@last30days 2>/dev/null || true
-
-  # --- Local skills (no public registry) — installed from this repo ---
-  # Same CLI path as registry skills, so the Skills CLI wires them into every
-  # agent too (Claude, Codex, Hermes, ...).
+  # Install owned and attributed snapshots from this repository.
   for local_skill in "$DOTFILES_DIR"/ai/skills/*/; do
     [ -d "$local_skill" ] || continue
-    npx skills add --global -y "${local_skill%/}" 2>/dev/null || true
+    if ! npx skills add "${local_skill%/}" --global --agent '*' --yes; then
+      skill_failures+=("install ${local_skill%/}")
+    fi
   done
-  print_success "Global skills installed (Skills CLI wired them into all agents)"
+
+  if [ "${#skill_failures[@]}" -gt 0 ]; then
+    print_error "Skill setup failed:"
+    printf '  - %s\n' "${skill_failures[@]}"
+    exit 1
+  fi
+  print_success "Curated global skills installed for all Skills CLI agents"
 else
-  print_warning "npx not found, skipping skills installation"
+  print_error "npx not found; global skills were not installed"
+  exit 1
 fi
 
 # ===== iOS skills (asc CLI) — mirror into Codex + Hermes =====
