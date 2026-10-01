@@ -292,7 +292,10 @@ fi
 create_symlink "$DOTFILES_DIR/git/.gitconfig" "$HOME/.gitconfig"
 create_symlink "$DOTFILES_DIR/git/.gitignore_global" "$HOME/.gitignore_global"
 
-# Codex
+# Agent instructions: AGENTS.md is the single source of truth.
+# Claude Code loads ~/.claude/CLAUDE.md, so point it at AGENTS.md (no CLAUDE.md in the repo).
+mkdir -p "$HOME/.claude"
+create_symlink "$DOTFILES_DIR/AGENTS.md" "$HOME/.claude/CLAUDE.md"
 mkdir -p "$HOME/.codex"
 create_symlink "$DOTFILES_DIR/AGENTS.md" "$HOME/.codex/AGENTS.md"
 

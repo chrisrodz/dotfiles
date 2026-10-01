@@ -188,7 +188,7 @@ Herdr runs as a per-user login service after bootstrap. Launch or reattach with
 
 ### Agent Instructions and Skills
 
-- Canonical rules: `AGENTS.md` (shared by Claude, Codex, Cursor, Hermes); bootstrap links it to `~/.codex/AGENTS.md`
+- Canonical rules: `AGENTS.md` (shared by Claude, Codex, Cursor, Hermes); bootstrap links it to `~/.codex/AGENTS.md` and `~/.claude/CLAUDE.md`
 - Skills: not managed here. My skills and a curated catalog of others' skills live in [chrisrodz/skills](https://github.com/chrisrodz/skills). Install with `npx skills add chrisrodz/skills --global`
 - `asc-*` iOS skills ship with the `asc` brew CLI
 
