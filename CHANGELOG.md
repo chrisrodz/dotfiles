@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Trimmed `AGENTS.md` (149 to 92 lines): removed generic scaffolding models already follow, made the docs rule conditional, and added scope-and-completion rules (stop when done, no unrequested additions, ideas-then-stop, final report shape).
 - Removed the `ai/` directory (skills, slash commands, helper scripts, Codex config, docs) and `claude/CLAUDE.md`. Skills moved to https://github.com/chrisrodz/skills (own skills in the README, third-party catalog in `REFERENCES.md`); bootstrap no longer installs skills or links commands. `AGENTS.md` is the single source of truth, linked to `~/.codex/AGENTS.md` and `~/.claude/CLAUDE.md`.
 - Added the `i-have-adhd` skill for action-first, low-friction agent output.
 - Removed stale `frontend-design`, `prd-to-issues`, and legacy global `workspace-audit` skills across Skills CLI agents; retained Hermes' maintained note-taking audit.
