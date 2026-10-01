@@ -81,7 +81,7 @@ Style: concise, telegraphic, noun-phrases ok. No emojis.
 - Functions: max 3-4 params; beyond that use a config object. Avoid boolean params.
 - Comments explain WHY, not WHAT.
 - TODO format: `// TODO: [context] description`.
-- Ticket refs (`JIRA-123`, `INFR-456`, etc.): TODOs and commit messages only. Explanatory comments, docstrings, and PR descriptions stay self-contained: a future reader without tracker access must still understand the reasoning.
+- Explanatory comments, docstrings, and PR descriptions stay self-contained: a future reader without tracker access must still understand the reasoning.
 - Errors: domain-specific types per module; include what failed and with what inputs (IDs, paths, values); map external errors at boundaries.
 - New dependency: can it be <100 lines? Is it maintained? Transitive cost, license, abandonment risk.
 - Refactor first only when it makes the requested change safer or smaller. Keep behavior and structural changes separate; "while I'm here" changes get their own commit or ticket.
