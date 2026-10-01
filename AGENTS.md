@@ -1,31 +1,35 @@
 # AGENTS.md
 
 Owner: Christian A. Rodriguez Encarnación
-Style: concise, telegraphic, noun-phrases ok, minimal tokens. No emojis.
+Style: concise, telegraphic, noun-phrases ok. No emojis.
 
-## Core Principles
-- Clarity > cleverness — maintainable, not impressive
-- Explicit > implicit — no magic; make behavior obvious
-- Composition > inheritance — small units that combine
-- Fail fast, fail loud — surface errors at the source
-- Delete code — less code = fewer bugs; question every addition
-- Verify, don't assume — run it, test it, prove it
-- Make the best decision that will elevate all three: the user experience (UX), developer experience (DX), and agent experience (AX) always, without breaking anything.
+## Principles
+
+- Clarity > cleverness; explicit > implicit; composition > inheritance.
+- Fail fast, fail loud: surface errors at the source.
+- Delete code; question every addition.
+- Verify, don't assume: run it, test it, prove it.
+- Prefer the decision that improves UX, DX, and AX together without breaking anything.
+- When priorities conflict: minimal, self-documenting, type-exact, secure, performant, accessible, testable.
+
+## Scope and Completion
+
+- Do what was asked. When the work is done and checked, stop and report. Don't add features, tests, files, docs, or refactors that weren't asked for; mention them at the end.
+- Asked for ideas, options, or a plan: give that and stop. Don't build until told.
+- Ask only when a missing choice changes scope, risk, or the result. Otherwise state the assumption and proceed.
+- Final report: what changed, what was verified, what's open. No step-by-step recap. Don't echo large code blocks unless asked.
+- Brainstorming or investigation: use the smallest visual that makes the idea, evidence, or tradeoff clear (`show-me` skill when invoked).
 
 ## Agent Protocol
 
 - Timezone: America/Puerto_Rico (UTC-4).
-- Use `gh` for GitHub; avoid the web UI. Use `gh pr view/diff` for viewing PRs
-- Never use `#<number>` in PR/issue comments or descriptions — GitHub auto-links it and surfaces unrelated PRs/issues. Use a plain number or word ("PR 204", "finding 1") or the full URL.
-- Use concise conventional commits: `feat:`, `fix:`, `docs:`, `style:`, `refactor:`, `perf:`, `test:`, `build:`, `ci:`, `chore:`. Add `!` for breaking changes or scope like `feat(api):`.
-- ASCII only in docs unless a file already uses Unicode.
-- ASCII art allowed only for planning visuals.
-- Need upstream file: stage in /tmp/, then cherry-pick; never overwrite tracked.
-- Fix root cause (not band-aid).
-- Ask only when a missing choice changes scope, risk, or the result. Otherwise state the assumption and proceed.
-- Conflicts: call out; pick safer path.
+- Use `gh` for GitHub; avoid the web UI. Use `gh pr view/diff` for viewing PRs.
+- Never use `#<number>` in PR/issue comments or descriptions: GitHub auto-links it and surfaces unrelated PRs/issues. Use a plain number or word ("PR 204", "finding 1") or the full URL.
+- Conventional commits: `feat:`, `fix:`, `docs:`, `style:`, `refactor:`, `perf:`, `test:`, `build:`, `ci:`, `chore:`. Add `!` for breaking changes or a scope like `feat(api):`.
+- ASCII only in docs unless a file already uses Unicode. ASCII art only for planning visuals.
+- Need an upstream file: stage in /tmp/, then cherry-pick; never overwrite tracked.
+- Fix the root cause, not the symptom. Debugging: reproduce first, one hypothesis at a time, change one thing, add a regression test.
 - Preserve unrelated changes. If they overlap with the task or break validation, stop and ask.
-- Leave breadcrumb notes in thread.
 
 ## Authorization
 
@@ -39,17 +43,6 @@ Style: concise, telegraphic, noun-phrases ok, minimal tokens. No emojis.
 - Never create, modify, or delete Coolify resources without explicit user approval first. Read-only inspection is fine; writes require a direct yes in the current thread.
 - Never connect/disconnect/modify Cloudflare WARP (`warp-cli connect`, `disconnect`, `registration delete`, settings changes, profile switches) without explicit user approval first. Read-only status checks (`warp-cli status`, `settings`, `registration show`) are fine; any state change requires a direct yes in the current thread.
 
-## Debugging
-1. Reproduce reliably.
-2. Isolate: smallest input that fails.
-3. Read the error — full stack trace.
-4. Form one hypothesis.
-5. Test it: log, write a test, inspect state.
-6. Fix and verify — change one thing.
-7. Add regression test.
-
-Don't: change multiple things at once; assume cause without evidence; fix symptoms instead of root causes.
-
 ## Workspace
 
 - Primary workspace: `~/repos`.
@@ -57,33 +50,12 @@ Don't: change multiple things at once; assume cause without evidence; fix sympto
 
 ## Docs
 
-- If a repo has docs, list them early (run any `docs:list` script if present).
-- Follow `read_when` hints before coding.
-- Update docs when behavior/API changes.
-
-## Code Quality Priorities
-
-1) Minimal.
-2) Self-documenting.
-3) Type-exact.
-4) Secure.
-5) Performant.
-6) Accessible.
-7) Testable.
-
-## Before Writing Code
-- Identify failure modes: invalid inputs, missing deps, network/IO, concurrency, resource exhaustion.
-- Classify scope: A) core flow, B) edge cases, C) out of scope (document, don't implement).
-- Check existing code — extend before creating.
+- Read the docs relevant to the change (`read_when` hints; run a `docs:list` script if the repo has one). Update docs when behavior or API changes.
 
 ## Planning
 
-- For non-trivial work, provide a short plan before editing.
-- Keep scope tight; split large files when they grow past ~500 LOC.
-- Group by feature/domain, not by layer.
-- For every brainstorming or investigation task, use the globally installed
-  `show-me` skill. Pick the smallest visual that makes the key idea, evidence,
-  or tradeoff clear; keep supporting prose concise.
+- Non-trivial work: short plan before editing. Check existing code; extend before creating.
+- Split files that grow past ~500 LOC. Group by feature/domain, not by layer.
 
 ## Git
 
@@ -92,56 +64,28 @@ Don't: change multiple things at once; assume cause without evidence; fix sympto
 - Create or push a non-default branch when the user requests code changes, a PR, or a landing workflow.
 - Push after meaningful checkpoints. Never force-push or push the default branch unless asked.
 - No amend unless asked.
-- No destructive ops without explicit request (`reset --hard`, `clean`, `restore`, `rm`, etc.).
-- Use `trash` for deletions when possible.
+- No destructive ops without explicit request (`reset --hard`, `clean`, `restore`, `rm`, etc.). Use `trash` for deletions when possible.
 - Stage explicit paths only.
 
 ## Build / Test
 
 - Prefer end-to-end verification; if blocked, say what is missing.
-- Add regression tests when the change warrants it.
+- Add regression tests when the change warrants them.
 - Before handoff, run the relevant repo gate. Report skipped checks and why.
 - Inspect failed CI before rerunning it. Fix the cause, push, and monitor the result.
 - For PRs, address one round of available AI review feedback before handoff or merge. Rerun affected checks.
-- Pre-submit: no commented-out code; no naked TODOs (use `// TODO: [reason] desc`); actionable error msgs; no hardcoded secrets.
-- Test behavior, not implementation. Public interface, not private details.
-- Unit tests by default. Integration tests for: critical paths, complex interactions, external service contracts.
+- Pre-submit: no commented-out code; no naked TODOs; actionable error messages; no hardcoded secrets.
 
 ## Code Style
-- Functions: max 3-4 params; beyond that use a config object.
-- Avoid boolean params — they obscure intent at call sites.
-- Comments explain WHY, not WHAT. Delete comments that restate code.
-- TODO format: `// TODO: [context] description`
-- Ticket refs (`JIRA-123`, `INFR-456`, etc.): TODOs + commit messages only. Explanatory comments, docstrings, PR descriptions: self-contained — a future reader without tracker access must still understand the reasoning.
 
-## Error Handling
-- Define domain-specific error types per module.
-- Include context: what failed, with what inputs (IDs, paths, values).
-- Map external errors at boundaries — don't leak implementation details.
-- Fail at the source; don't pass invalid state downstream.
-
-## Refactoring
-- Refactor first only when it makes the requested change safer or smaller.
-- Keep behavior and structural changes separate when practical.
-- "While I'm here" changes: separate commit or ticket.
-
-## Dependencies
-Before adding: can we solve this in <100 lines? Is it maintained? Transitive cost? License? Abandonment risk?
-
-## Tooling
-
-- Use repo package manager/runtime; no swaps without approval.
-- Slash commands:
-  - Codex global: `~/.codex/prompts/`
-  - Claude repo: `.claude/commands/`
-  - Cursor repo: `.cursor/commands/`
-  - Cursor global: `~/.cursor/commands/`
-
-## Token Efficiency
-- Avoid redundant reads and reruns. Repeat when output was incomplete, state may have changed, or verification requires it.
-- Don't echo large blocks of code unless asked.
-- Batch related edits — don't make 5 edits when 1 handles it.
-- Don't summarize what you just did unless result is ambiguous.
+- Functions: max 3-4 params; beyond that use a config object. Avoid boolean params.
+- Comments explain WHY, not WHAT.
+- TODO format: `// TODO: [context] description`.
+- Explanatory comments, docstrings, and PR descriptions stay self-contained: a future reader without tracker access must still understand the reasoning.
+- Errors: domain-specific types per module; include what failed and with what inputs (IDs, paths, values); map external errors at boundaries.
+- New dependency: can it be <100 lines? Is it maintained? Transitive cost, license, abandonment risk.
+- Refactor first only when it makes the requested change safer or smaller. Keep behavior and structural changes separate; "while I'm here" changes get their own commit or ticket.
+- Use the repo's package manager/runtime; no swaps without approval.
 
 ## Notes
 
