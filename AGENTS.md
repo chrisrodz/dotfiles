@@ -57,7 +57,7 @@ Don't: change multiple things at once; assume cause without evidence; fix sympto
 
 ## Docs
 
-- If a repo has docs, list them early (run any `docs:list` script or `docs-list` helper if present).
+- If a repo has docs, list them early (run any `docs:list` script if present).
 - Follow `read_when` hints before coding.
 - Update docs when behavior/API changes.
 
@@ -94,7 +94,7 @@ Don't: change multiple things at once; assume cause without evidence; fix sympto
 - No amend unless asked.
 - No destructive ops without explicit request (`reset --hard`, `clean`, `restore`, `rm`, etc.).
 - Use `trash` for deletions when possible.
-- Prefer `committer` helper when available; stage explicit paths only.
+- Stage explicit paths only.
 
 ## Build / Test
 

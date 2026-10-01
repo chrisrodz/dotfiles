@@ -53,7 +53,7 @@ cd ~/repos/dotfiles
 ./bootstrap.sh --yolo   # overwrite conflicts (backups still kept)
 ```
 
-Rerun anytime to install missing packages or skills and refresh symlinks.
+Rerun anytime to install missing packages and refresh symlinks.
 
 ### Considerations
 
@@ -87,8 +87,7 @@ Common changes you might want to make:
 | **Add brew packages**      | `Brewfile`         | Add `brew "package-name"`, run `brew bundle`                 |
 | **Change git settings**    | `git/.gitconfig`   | Modify aliases, behavior (user info in `~/.gitconfig.local`) |
 | **Update agent rules**     | `AGENTS.md`        | Edit shared instructions (Codex/Claude/Cursor)               |
-| **Add slash commands**     | `ai/commands/`     | Add `.md` files with prompts                                 |
-| **Add skills**             | `npx skills add`   | Install globally via Skills CLI                              |
+| **Add skills**             | `chrisrodz/skills` | Separate repo; see its README and REFERENCES.md              |
 | **Modify shell behavior**  | `zsh/.zshrc`       | Edit PATH, themes, plugins                                   |
 
 ### Updating Other Machines
@@ -187,98 +186,17 @@ Herdr runs as a per-user login service after bootstrap. Launch or reattach with
 
 **Setup**: Copy `git/.gitconfig.local.example` to `~/.gitconfig.local` and add your name/email
 
-### Agent Instructions and Commands
+### Agent Instructions and Skills
 
-- Canonical rules: `AGENTS.md` (shared by Claude, Codex, Cursor, Hermes)
-- Pointer for Claude: `claude/CLAUDE.md`
-- Codex config: `ai/codex-config.toml` (model settings, copied to `~/.codex/config.toml`)
-- Commands: `ai/commands` (symlinked to `~/.codex/prompts`, `~/.claude/commands`, `~/.cursor/commands`)
-- Skills: installed globally to `~/.agents/skills/` (cross-agent standard), then fanned out
-
-Bootstrap wires the symlinks, installs global skills, and exposes them to every agent.
-
-Retired skills (`frontend-design`, `prd-to-issues`, and the legacy global
-`workspace-audit`) are removed from the shared store and all Skills CLI agents
-during bootstrap. Hermes' separate, maintained note-taking audit remains intact.
-
-### How skills reach each agent
-
-`npx skills add --global` installs each skill to `~/.agents/skills/` and the
-Skills CLI wires it into **Claude, Codex, Hermes** (and ~30 other agents)
-automatically — no per-agent config in this repo. Local skills under `ai/skills/`
-install the same way (bootstrap passes their repo path).
-
-Exception: the `asc-*` iOS skills ship with the `asc` CLI (not `npx`), which only
-registers them into `~/.agents/skills/` and Claude. Bootstrap mirrors just those
-into Codex and Hermes so they're available in all three.
-
-### Global Skills (installed by bootstrap)
-
-Grouped by domain — the canonical list lives in `bootstrap.sh`:
-
-```bash
-# Output ergonomics
-npx skills add --global --agent '*' -y ayghri/i-have-adhd@i-have-adhd
-
-# Core utilities (steipete/agent-scripts)
-npx skills add --global -y steipete/agent-scripts@video-transcript-downloader
-npx skills add --global -y steipete/agent-scripts@brave-search
-npx skills add --global -y steipete/agent-scripts@nano-banana-pro
-npx skills add --global -y steipete/agent-scripts@openai-image-gen
-npx skills add --global -y steipete/agent-scripts@create-cli
-npx skills add --global -y steipete/agent-scripts@instruments-profiling
-npx skills add --global -y steipete/agent-scripts@markdown-converter
-npx skills add --global -y steipete/agent-scripts@native-app-performance
-
-# Web & cloud stacks — React / Next.js / React Native (Vercel), Cloudflare
-npx skills add --global -y vercel-labs/agent-skills@vercel-react-best-practices
-npx skills add --global -y vercel-labs/agent-skills@vercel-react-native-skills
-npx skills add --global -y vercel-labs/agent-skills@vercel-optimize
-npx skills add --global -y cloudflare/skills@cloudflare
-npx skills add --global -y cloudflare/skills@workers-best-practices
-npx skills add --global -y cloudflare/skills@wrangler
-
-# Mobile / native — Expo (iOS asc-* skills ship with the `asc` brew CLI)
-npx skills add --global -y expo/skills@building-native-ui
-npx skills add --global -y expo/skills@expo-api-routes
-npx skills add --global -y expo/skills@expo-cicd-workflows
-npx skills add --global -y expo/skills@expo-deployment
-npx skills add --global -y expo/skills@expo-dev-client
-npx skills add --global -y expo/skills@expo-tailwind-setup
-npx skills add --global -y expo/skills@native-data-fetching
-npx skills add --global -y expo/skills@upgrading-expo
-npx skills add --global -y expo/skills@use-dom
-
-# Design & frontend polish
-npx skills add --global -y openai/skills@frontend-skill
-npx skills add --global -y pbakaus/impeccable
-npx skills add --global -y Dammyjay93/interface-design
-npx skills add --global -y ibelick/ui-skills
-
-# Integrations & media
-npx skills add --global -y vercel-labs/agent-browser@agent-browser
-npx skills add --global -y agentmail-to/agentmail-skills@agentmail
-npx skills add --global -y resend/resend-skills@resend
-npx skills add --global -y remotion-dev/skills@remotion-best-practices
-
-# Research & async coding workflows
-npx skills add --global -y mattpocock/skills
-npx skills add --global -y mvanhorn/last30days-skill@last30days
-```
-
-Local skills with no public registry live in `ai/skills/` (`polishing-issues`);
-bootstrap installs them via the Skills CLI from their repo path, so they reach
-every agent just like registry skills.
-
-To find and add more skills: `npx skills find <query>` then `npx skills add --global -y <owner/repo@skill>`
-
-Useful Matt Pocock skills include `/grill-me`, `/grill-with-docs`, `/diagnose`, `/triage`, `/to-prd`, `/to-issues`, `/prd-to-plan`, `/request-refactor-plan`, `/improve-codebase-architecture`, `/qa`, and `/handoff`.
+- Canonical rules: `AGENTS.md` (shared by Claude, Codex, Cursor, Hermes); bootstrap links it to `~/.codex/AGENTS.md` and `~/.claude/CLAUDE.md`
+- Skills: not managed here. My skills and a curated catalog of others' skills live in [chrisrodz/skills](https://github.com/chrisrodz/skills). Install with `npx skills add chrisrodz/skills --global`
+- `asc-*` iOS skills ship with the `asc` brew CLI
 
 ### AI Coding Assistants
 
 - `claude-code` - Global Claude Code CLI installed via Homebrew for Anthropic workflows
 - `codex-cli` - Global OpenAI Codex CLI installed via Homebrew for Codex CLI tooling
-- `hermes` - Nous Research Hermes agent; the Skills CLI wires global skills into it directly
+- `hermes` - Nous Research Hermes agent
 
 ### Expo iOS Simulator
 
