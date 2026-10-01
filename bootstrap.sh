@@ -130,8 +130,6 @@ if [ "$OS" = "Darwin" ]; then
   nvm use default --silent
   print_success "Node.js $(node --version) available via NVM"
 
-  brew services start herdr
-  print_success "Herdr service started"
 
 elif [ "$OS" = "Linux" ]; then
   # Linux: Install packages via apt
