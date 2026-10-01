@@ -10,12 +10,3 @@
 dotfiles-backup-*
 .claude/settings.local.json
 
-# AI tooling build output
-ai/bin/
-ai/tmp/
-
-# Codex system skills cache
-ai/skills/.system/
-
-# Local per-machine skill config overrides (real values; repo stays agnostic)
-ai/skills/**/config.local.md

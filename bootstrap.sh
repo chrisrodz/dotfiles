@@ -292,124 +292,12 @@ fi
 create_symlink "$DOTFILES_DIR/git/.gitconfig" "$HOME/.gitconfig"
 create_symlink "$DOTFILES_DIR/git/.gitignore_global" "$HOME/.gitignore_global"
 
-# Claude
-mkdir -p "$HOME/.claude"
-create_symlink "$DOTFILES_DIR/claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
-create_symlink "$DOTFILES_DIR/ai/commands" "$HOME/.claude/commands"
-
 # Codex
 mkdir -p "$HOME/.codex"
 create_symlink "$DOTFILES_DIR/AGENTS.md" "$HOME/.codex/AGENTS.md"
-create_symlink "$DOTFILES_DIR/ai/commands" "$HOME/.codex/prompts"
-# Merge codex config (preserve machine-specific project trusts)
-if [ -f "$HOME/.codex/config.toml" ]; then
-  # Keep existing config, just ensure model settings are current
-  print_success "Codex config exists (preserving project trusts)"
-else
-  cp "$DOTFILES_DIR/ai/codex-config.toml" "$HOME/.codex/config.toml"
-  print_success "Created Codex config"
-fi
 
-# Cursor
-mkdir -p "$HOME/.cursor"
-create_symlink "$DOTFILES_DIR/ai/commands" "$HOME/.cursor/commands"
-
-# Shared scripts
-mkdir -p "$HOME/.local/bin"
-for script in committer nanobanana; do
-  create_symlink "$DOTFILES_DIR/ai/scripts/$script" "$HOME/.local/bin/$script"
-done
-
-# ===== Install Global Skills =====
-echo "Installing global agent skills..."
-if command -v npx &> /dev/null; then
-  # `npx skills add --global` installs to ~/.agents/skills/ and wires each skill
-  # into Claude, Codex, Hermes (and ~30 other agents) automatically — no manual
-  # fan-out or per-agent config needed. Local skills under ai/skills/ install the
-  # same way by passing their repo path (see the local-skills loop below).
-
-  # Retired skills: remove canonical copies and every Skills CLI registration.
-  npx skills remove --global -y frontend-design prd-to-issues workspace-audit 2>/dev/null || true
-
-  # --- Output ergonomics ---
-  npx skills add --global --agent '*' -y ayghri/i-have-adhd@i-have-adhd 2>/dev/null || true
-
-  # --- Core utilities (steipete/agent-scripts) ---
-  npx skills add --global -y steipete/agent-scripts@video-transcript-downloader 2>/dev/null || true
-  npx skills add --global -y steipete/agent-scripts@brave-search 2>/dev/null || true
-  npx skills add --global -y steipete/agent-scripts@nano-banana-pro 2>/dev/null || true
-  npx skills add --global -y steipete/agent-scripts@openai-image-gen 2>/dev/null || true
-  npx skills add --global -y steipete/agent-scripts@create-cli 2>/dev/null || true
-  npx skills add --global -y steipete/agent-scripts@instruments-profiling 2>/dev/null || true
-  npx skills add --global -y steipete/agent-scripts@markdown-converter 2>/dev/null || true
-  npx skills add --global -y steipete/agent-scripts@native-app-performance 2>/dev/null || true
-
-  # --- Web & cloud stacks ---
-  # React / Next.js / React Native (Vercel Engineering, official)
-  npx skills add --global -y vercel-labs/agent-skills@vercel-react-best-practices 2>/dev/null || true
-  npx skills add --global -y vercel-labs/agent-skills@vercel-react-native-skills 2>/dev/null || true
-  npx skills add --global -y vercel-labs/agent-skills@vercel-optimize 2>/dev/null || true
-  # Cloudflare (Workers, Pages, KV/D1/R2, Agents SDK — official)
-  npx skills add --global -y cloudflare/skills@cloudflare 2>/dev/null || true
-  npx skills add --global -y cloudflare/skills@workers-best-practices 2>/dev/null || true
-  npx skills add --global -y cloudflare/skills@wrangler 2>/dev/null || true
-
-  # --- Mobile / native (Expo — official) ---
-  # iOS App Store Connect skills (asc-*) ship with the `asc` CLI (see Brewfile), not here.
-  npx skills add --global -y expo/skills@building-native-ui 2>/dev/null || true
-  npx skills add --global -y expo/skills@expo-api-routes 2>/dev/null || true
-  npx skills add --global -y expo/skills@expo-cicd-workflows 2>/dev/null || true
-  npx skills add --global -y expo/skills@expo-deployment 2>/dev/null || true
-  npx skills add --global -y expo/skills@expo-dev-client 2>/dev/null || true
-  npx skills add --global -y expo/skills@expo-tailwind-setup 2>/dev/null || true
-  npx skills add --global -y expo/skills@native-data-fetching 2>/dev/null || true
-  npx skills add --global -y expo/skills@upgrading-expo 2>/dev/null || true
-  npx skills add --global -y expo/skills@use-dom 2>/dev/null || true
-  # React Native device interaction (Callstack)
-  npx skills add --global -y callstackincubator/agent-device@agent-device 2>/dev/null || true
-
-  # --- Design & frontend polish ---
-  npx skills add --global -y openai/skills@frontend-skill 2>/dev/null || true
-  npx skills add --global -y pbakaus/impeccable 2>/dev/null || true
-  npx skills add --global -y Dammyjay93/interface-design 2>/dev/null || true
-  npx skills add --global -y ibelick/ui-skills 2>/dev/null || true
-
-  # --- Integrations & media ---
-  npx skills add --global -y vercel-labs/agent-browser@agent-browser 2>/dev/null || true
-  npx skills add --global -y agentmail-to/agentmail-skills@agentmail 2>/dev/null || true
-  npx skills add --global -y resend/resend-skills@resend 2>/dev/null || true
-  npx skills add --global -y remotion-dev/skills@remotion-best-practices 2>/dev/null || true
-
-  # --- Research & async coding workflows ---
-  npx skills add --global -y mattpocock/skills 2>/dev/null || true
-  npx skills add --global -y mvanhorn/last30days-skill@last30days 2>/dev/null || true
-
-  # --- Local skills (no public registry) — installed from this repo ---
-  # Same CLI path as registry skills, so the Skills CLI wires them into every
-  # agent too (Claude, Codex, Hermes, ...).
-  for local_skill in "$DOTFILES_DIR"/ai/skills/*/; do
-    [ -d "$local_skill" ] || continue
-    npx skills add --global -y "${local_skill%/}" 2>/dev/null || true
-  done
-  print_success "Global skills installed (Skills CLI wired them into all agents)"
-else
-  print_warning "npx not found, skipping skills installation"
-fi
-
-# ===== iOS skills (asc CLI) — mirror into Codex + Hermes =====
-# npx-installed skills reach every agent via the Skills CLI. The asc-* iOS skills
-# are different: the `asc` CLI registers them into ~/.agents/skills and Claude
-# only, so mirror just those into Codex and Hermes (additive — never clobbers).
-asc_synced=0
-for asc_skill in "$HOME"/.agents/skills/asc-*/; do
-  [ -d "$asc_skill" ] || continue
-  name=$(basename "$asc_skill")
-  for agent_skills in "$HOME/.codex/skills" "$HOME/.hermes/skills"; do
-    [ -d "$agent_skills" ] || continue
-    [ -e "$agent_skills/$name" ] || { ln -sf "$asc_skill" "$agent_skills/$name"; asc_synced=1; }
-  done
-done
-[ "$asc_synced" = "1" ] && print_success "Mirrored asc-* iOS skills into Codex + Hermes"
+# Skills live in https://github.com/chrisrodz/skills (own skills in README.md,
+# curated third-party catalog in REFERENCES.md). Not installed by bootstrap.
 
 # ===== Environment Setup =====
 if [ ! -f "$HOME/.env.local" ]; then
