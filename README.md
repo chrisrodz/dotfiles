@@ -131,8 +131,8 @@ gh repo sync
 - `trash` - Safe delete CLI
 - `herdr` - Persistent, agent-aware terminal multiplexer
 
-Herdr runs as a per-user login service after bootstrap. Launch or reattach with
-`herdr`; agent processes and panes remain available across terminal sessions.
+Launch or reattach with `herdr`; it manages its own server, so agent processes and
+panes remain available across terminal sessions.
 
 **Version Managers**
 
